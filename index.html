@@ -422,6 +422,16 @@
     document.querySelectorAll('video').forEach(v => { v.removeAttribute('playsinline'); v.removeAttribute('webkit-playsinline'); });
   }
 
+    // Single video playback: pause all other videos when one starts playing
+    document.addEventListener('play', function(e) {
+      if (e.target.tagName === 'VIDEO') {
+        document.querySelectorAll('video').forEach(v => {
+          if (v !== e.target && !v.paused) v.pause();
+        });
+      }
+    }, true);
+
+
 
       // === TRELLO TWO-WAY INTEGRATION ===
       const TRELLO_KEY = '331b6d8e45165ca6acb49fd4b24cd878';
