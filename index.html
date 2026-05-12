@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tactical Management & Leadership Course</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --bg: #0a0f1a;
+    --card: #111827;
+    --card-hover: #1a2332;
+    --cyan: #00e5ff;
+    --cyan-dim: rgba(0,229,255,0.15);
+    --cyan-glow: rgba(0,229,255,0.3);
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #ffffff;
+    --accent-orange: #ff6b35;
+    --accent-green: #10b981;
+    --accent-purple: #a78bfa;
+    --accent-pink: #f472b6;
+    --accent-yellow: #fbbf24;
+    --section-leadership: #00e5ff;
+    --section-hr: #f472b6;
+    --section-coding: #10b981;
+    --section-ops: #fbbf24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(10,15,26,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.1rem; color: var(--cyan); }
+  .nav-brand svg { width: 28px; height: 28px; }
+  .nav-links { display: flex; gap: 6px; list-style: none; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; }
+  .nav-links a:hover, .nav-links a.active { color: var(--text-bright); background: var(--cyan-dim); }
+  .nav-progress { position: absolute; bottom: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--cyan), var(--accent-purple)); transition: width 0.3s; }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, var(--cyan-glow) 0%, transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; animation: pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); } }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--card); font-size: 0.8rem; color: var(--cyan); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.5rem; position: relative; }
+  .hero h1 { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 900; line-height: 1.1; margin-bottom: 1rem; position: relative; background: linear-gradient(135deg, var(--text-bright), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero p { font-size: 1.2rem; color: var(--text-dim); max-width: 600px; margin-bottom: 2rem; position: relative; }
+  .hero-stats { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; position: relative; }
+  .hero-stat { text-align: center; }
+  .hero-stat-value { font-size: 2rem; font-weight: 800; color: var(--cyan); }
+  .hero-stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  .agenda-section { padding: 4rem 2rem; max-width: 1000px; margin: 0 auto; }
+  .agenda-section h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; }
+  .timeline { position: relative; padding-left: 60px; }
+  .timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--section-leadership), var(--section-hr), var(--section-coding), var(--section-ops)); }
+  .timeline-item { position: relative; margin-bottom: 1.5rem; padding: 1.25rem 1.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s; cursor: pointer; }
+  .timeline-item:hover { background: var(--card-hover); border-color: var(--cyan); transform: translateX(4px); }
+  .timeline-item::before { content: ''; position: absolute; left: -44px; top: 1.5rem; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--cyan); background: var(--bg); }
+  .timeline-time { font-size: 0.8rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.05em; }
+  .timeline-title { font-size: 1.1rem; font-weight: 700; color: var(--text-bright); margin: 4px 0; }
+  .timeline-desc { font-size: 0.9rem; color: var(--text-dim); }
+  .timeline-tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; margin-top: 8px; }
+  .tag-leadership { background: rgba(0,229,255,0.15); color: var(--cyan); }
+  .tag-hr { background: rgba(244,114,182,0.15); color: var(--accent-pink); }
+  .tag-coding { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+  .tag-ops { background: rgba(251,191,36,0.15); color: var(--accent-yellow); }
+  .tag-break { background: rgba(148,163,184,0.15); color: var(--text-dim); }
+  .section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; }
+  .section-header { text-align: center; margin-bottom: 3rem; }
+  .section-number { display: inline-block; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; margin-bottom: 1rem; }
+  .section-header h2 { font-size: 2.2rem; font-weight: 900; margin-bottom: 0.5rem; }
+  .section-header p { color: var(--text-dim); font-size: 1.1rem; }
+  .modules { display: grid; gap: 1.5rem; }
+  .module { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: all 0.3s; }
+  .module:hover { border-color: var(--cyan); box-shadow: 0 0 30px var(--cyan-dim); }
+  .module-header { padding: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; }
+  .module-header h3 { font-size: 1.2rem; font-weight: 700; color: var(--text-bright); margin-bottom: 4px; }
+  .module-header .subtitle { font-size: 0.85rem; color: var(--text-dim); }
+  .module-toggle { width: 32px; height: 32px; border-radius: 8px; background: var(--cyan-dim); border: none; color: var(--cyan); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: transform 0.3s; flex-shrink: 0; }
+  .module.open .module-toggle { transform: rotate(45deg); }
+  .module-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .module.open .module-body { max-height: 2000px; }
+  .module-content { padding: 0 1.5rem 1.5rem; }
+  .video-container { position: relative; border-radius: 12px; overflow: hidden; background: #000; margin: 1rem 0; aspect-ratio: 9/16; max-height: 400px; max-width: 225px; }
+  .video-container video { width: 100%; height: 100%; object-fit: contain; }
+  .video-row { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0; }
+  .discussion { background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.2); border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+  .discussion-label { font-size: 0.7rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .discussion p { font-size: 0.95rem; color: var(--text); font-style: italic; }
+  .exercise { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.25); border-radius: 12px; padding: 1.25rem; margin: 1rem 0; }
+  .exercise-label { font-size: 0.7rem; font-weight: 700; color: var(--accent-purple); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .exercise p, .exercise li { font-size: 0.95rem; color: var(--text); }
+  .exercise ul { padding-left: 1.25rem; margin-top: 0.5rem; }
+  .exercise li { margin-bottom: 4px; }
+  .buzzword-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .buzzword-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; transition: all 0.2s; cursor: pointer; }
+  .buzzword-card:hover { border-color: var(--accent-pink); background: var(--card-hover); }
+  .buzzword-term { font-weight: 700; color: var(--accent-pink); font-size: 0.95rem; margin-bottom: 6px; }
+  .buzzword-def { font-size: 0.85rem; color: var(--text-dim); display: none; }
+  .buzzword-card.revealed .buzzword-def { display: block; }
+  .buzzword-card .reveal-hint { font-size: 0.75rem; color: var(--text-dim); opacity: 0.5; }
+  .buzzword-card.revealed .reveal-hint { display: none; }
+  .scenario { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; transition: all 0.2s; }
+  .scenario:hover { border-color: var(--accent-pink); }
+  .scenario-title { font-weight: 700; color: var(--accent-pink); font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .scenario-situation { font-size: 0.95rem; color: var(--text); margin-bottom: 12px; font-style: italic; }
+  .scenario-answer { display: none; background: rgba(244,114,182,0.08); border-radius: 8px; padding: 1rem; margin-top: 8px; }
+  .scenario-answer h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-pink); margin-bottom: 6px; }
+  .scenario-answer p { font-size: 0.9rem; color: var(--text); }
+  .scenario.revealed .scenario-answer { display: block; }
+  .reveal-btn { background: rgba(244,114,182,0.15); border: 1px solid rgba(244,114,182,0.3); color: var(--accent-pink); padding: 6px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+  .reveal-btn:hover { background: rgba(244,114,182,0.25); }
+  .action-plan { background: linear-gradient(135deg, rgba(0,229,255,0.08), rgba(167,139,250,0.08)); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin: 2rem 0; }
+  .action-plan h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; color: var(--text-bright); }
+  .action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+  .action-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+  .action-card h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cyan); margin-bottom: 8px; }
+  .action-card p { font-size: 0.9rem; color: var(--text-dim); }
+  .key-points { margin: 1rem 0; }
+  .key-point { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+  .key-point-icon { width: 24px; height: 24px; border-radius: 6px; background: var(--cyan-dim); color: var(--cyan); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .key-point p { font-size: 0.95rem; color: var(--text); }
+  .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 3rem auto; max-width: 600px; }
+  .footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.85rem; }
+  @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2rem; } .hero-stats { gap: 1rem; } .timeline { padding-left: 40px; } .timeline::before { left: 14px; } .timeline-item::before { left: -34px; } .buzzword-grid { grid-template-columns: 1fr; } .video-container { max-width: 100%; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Tactical Management & Leadership
+  </div>
+  <ul class="nav-links">
+    <li><a href="#agenda" class="active">Agenda</a></li>
+    <li><a href="#leadership">Leadership</a></li>
+    <li><a href="#hr">HR Essentials</a></li>
+    <li><a href="#coding">Site Coding</a></li>
+    <li><a href="#action-plan">Action Plan</a></li>
+  </ul>
+  <div class="nav-progress" id="progress" style="width: 0%"></div>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-badge">Motorola Solutions &bull; Eco Demo Team</div>
+  <h1>Lead Sharper.<br>Build Better.<br>Execute Stronger.</h1>
+  <p>A full-day intensive for the management team. Leadership frameworks, HR readiness, hands-on coding, and tactical operations.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-value">13</div><div class="hero-stat-label">Video Clips</div></div>
+    <div class="hero-stat"><div class="hero-stat-value">8</div><div class="hero-stat-label">Leadership Modules</div></div>
+    <div class="hero-stat"><div class="hero-stat-value">5</div><div class="hero-stat-label">HR Scenarios</div></div>
+    <div class="hero-stat"><div class="hero-stat-value">12</div><div class="hero-stat-label">HR Terms</div></div>
+  </div>
+</section>
+
+<section class="agenda-section" id="agenda">
+  <h2>&#128197; Today's Agenda</h2>
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-time">9:00 - 9:15</div><div class="timeline-title">Welcome & Day Framing</div><div class="timeline-desc">Quick standup-style intro. Each manager shares one word for how they're walking in.</div><span class="timeline-tag tag-break">15 min</span></div>
+    <div class="timeline-item" onclick="location.href='#leadership'"><div class="timeline-time">9:15 - 10:30</div><div class="timeline-title">Block 1: Leadership + HR + Videos</div><div class="timeline-desc">Condensed leadership frameworks, HR buzzwords flashcards, tabletop HR scenarios. Videos woven throughout.</div><span class="timeline-tag tag-leadership">75 min &bull; Leadership + HR</span></div>
+    <div class="timeline-item"><div class="timeline-time">10:30 - 10:45</div><div class="timeline-title">Stretch Break</div><div class="timeline-desc">Recharge before tactical ops.</div><span class="timeline-tag tag-break">15 min</span></div>
+    <div class="timeline-item"><div class="timeline-time">10:45 - 11:30</div><div class="timeline-title">Tactical Ops &mdash; Trello Deep Dive</div><div class="timeline-desc">Work through the Trello board. What's on fire, what's blocked, what needs decisions.</div><span class="timeline-tag tag-ops">45 min &bull; Tactical</span></div>
+    <div class="timeline-item"><div class="timeline-time">11:30 - 12:45</div><div class="timeline-title">Lunch (Offsite)</div><div class="timeline-desc">No work talk encouraged. Physical reset matters.</div><span class="timeline-tag tag-break">75 min &bull; Offsite</span></div>
+    <div class="timeline-item" onclick="location.href='#coding'"><div class="timeline-time">12:45 - 2:45</div><div class="timeline-title">Block 2: Site Coding &mdash; ThePortal / ecodemo.app</div><div class="timeline-desc">Collaborative coding session. Pair programming with driver/navigator rotation.</div><span class="timeline-tag tag-coding">2 hrs &bull; Hands-on</span></div>
+    <div class="timeline-item"><div class="timeline-time">2:45 - 3:00</div><div class="timeline-title">Break / Regroup</div><div class="timeline-desc">Quick break before demos and close-out.</div><span class="timeline-tag tag-break">15 min</span></div>
+    <div class="timeline-item"><div class="timeline-time">3:00 - 3:30</div><div class="timeline-title">Demos & Decisions</div><div class="timeline-desc">Each pair demos what they worked on. Group decides what ships.</div><span class="timeline-tag tag-coding">30 min</span></div>
+    <div class="timeline-item" onclick="location.href='#action-plan'"><div class="timeline-time">3:30 - 4:00</div><div class="timeline-title">Close: Win, Challenge, Commitment</div><div class="timeline-desc">Each manager shares one win, one challenge, and one commitment. 30-day action plans.</div><span class="timeline-tag tag-leadership">30 min</span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="leadership">
+  <div class="section-header">
+    <div class="section-number" style="background: var(--cyan-dim); color: var(--cyan);">Block 1</div>
+    <h2>Tactical Management & Leadership</h2>
+    <p>Core frameworks from Simon Sinek and Leila Hormozi. Watch, discuss, apply.</p>
+  </div>
+  <div class="modules">
+    <div class="module" id="mod-why"><div class="module-header" onclick="toggleModule(this)"><div><h3>1. Start With Why</h3><div class="subtitle">Simon Sinek &bull; The Golden Circle</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>The Golden Circle:</strong> WHY (purpose) &rarr; HOW (process) &rarr; WHAT (product). Most organizations communicate outside-in. Great leaders communicate inside-out.</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>People don't buy what you do, they buy why you do it.</strong> This applies to your team too.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>Your WHY is your filter.</strong> Use it to make decisions, hire, and say no to things that don't align.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/60f1b821-v15044gf0000d6kasp7og65kqfredj30.MP4" type="video/mp4"></video></div></div><div class="discussion"><div class="discussion-label">Discussion Question</div><p>"What's the 'why' behind your team's work right now? Not the what &mdash; the why."</p></div></div></div></div>
+
+    <div class="module" id="mod-leader"><div class="module-header" onclick="toggleModule(this)"><div><h3>2. Leader vs Manager</h3><div class="subtitle">Distinguishing the two roles</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>Managers handle complexity.</strong> Planning, budgeting, organizing. It's about order.</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>Leaders handle change.</strong> Setting direction, aligning people, motivating. It's about movement.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>You need both.</strong> Know which hat you're wearing in each moment.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/6cffac88-v12044gd0000d7e2tbnog65nir63rek0.MP4" type="video/mp4"></video></div></div><div class="exercise"><div class="exercise-label">Paired Exercise (10 min)</div><p>Each manager lists 3 things they did last week. Categorize each as "managing" or "leading."</p></div><div class="discussion"><div class="discussion-label">Group Debrief</div><p>"Where are you over-indexed on managing vs leading?"</p></div></div></div></div>
+
+    <div class="module" id="mod-circle"><div class="module-header" onclick="toggleModule(this)"><div><h3>3. Circle of Safety</h3><div class="subtitle">Simon Sinek &bull; Building Trust</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>Leaders set the circle.</strong> When people feel safe, they focus outward on threats and opportunities.</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>Trust is earned in drops and lost in buckets.</strong> Every interaction builds or erodes the circle.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>Vulnerability is the entry fee.</strong> You go first. Model ownership and honesty about mistakes.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/6f1db52e-v12044gd0000d7fhnb7og65k6sjg61jg.MP4" type="video/mp4"></video></div><div class="video-container"><video controls preload="metadata"><source src="videos/8ebe5ea9-v12044gd0000d7ingbvog65hde5j6l9g.MP4" type="video/mp4"></video></div></div><div class="discussion"><div class="discussion-label">Vulnerable Discussion (8 min)</div><p>"Name a moment you broke the circle of safety on your team. What did you do about it?"</p></div></div></div></div>
+
+    <div class="module" id="mod-skill"><div class="module-header" onclick="toggleModule(this)"><div><h3>4. Skill &times; Will Matrix</h3><div class="subtitle">Assessing & developing your team</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>High Skill / High Will:</strong> Delegate and empower. Don't micromanage your stars.</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>High Skill / Low Will:</strong> Motivate and re-engage. Often a leadership problem.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>Low Skill / High Will:</strong> Guide and train. Diamonds in the rough. Invest heavily.</p></div><div class="key-point"><div class="key-point-icon">4</div><p><strong>Low Skill / Low Will:</strong> Direct conversation. Clear expectations, timelines, consequences.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/b8344df3-v12044gd0000d7jcqlfog65nktdsibb0.MP4" type="video/mp4"></video></div></div><div class="exercise"><div class="exercise-label">Private Exercise (10 min)</div><p>Plot your direct reports on the matrix. Then discuss: "What's your move for each quadrant?"</p></div></div></div></div>
+
+    <div class="module" id="mod-accountability"><div class="module-header" onclick="toggleModule(this)"><div><h3>5. Radical Accountability</h3><div class="subtitle">Owning outcomes, not excuses</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>Accountability starts at the top.</strong> If your team missed the target, YOU missed it.</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>The opposite of accountability is blame.</strong> Blame travels down, accountability travels up.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>Public praise, private correction.</strong> Celebrate wins loudly. Address misses one-on-one.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/2608589b-v12044gd0000d7k1cqnog65ri4p33fs0.MP4" type="video/mp4"></video></div><div class="video-container"><video controls preload="metadata"><source src="videos/e3d63b9a-v12044gd0000d7k67jfog65irfgiddv0.MP4" type="video/mp4"></video></div></div><div class="discussion"><div class="discussion-label">Discussion Question</div><p>"What's a recent miss where you took accountability vs delegated blame?"</p></div></div></div></div>
+
+    <div class="module" id="mod-100"><div class="module-header" onclick="toggleModule(this)"><div><h3>6. The $100/Hour Test</h3><div class="subtitle">Leila Hormozi &bull; Time Management for Leaders</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>Score every task:</strong> $10/hr, $100/hr, $1,000/hr, $10,000/hr.</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>$10/hr:</strong> Admin, data entry, scheduling. DELEGATE IT.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>$100/hr:</strong> Problem solving, team coaching, process improvement. Your core job.</p></div><div class="key-point"><div class="key-point-icon">4</div><p><strong>$1,000+/hr:</strong> Strategy, relationship building, innovation. This is where leaders win.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/9bff57e9-v12044gd0000d7kq6lnog65gllj38tog.MP4" type="video/mp4"></video></div><div class="video-container"><video controls preload="metadata"><source src="videos/bbad4470-v12044gd0000d7mmr4nog65tnknn54k0.MP4" type="video/mp4"></video></div></div><div class="exercise"><div class="exercise-label">Exercise (10 min)</div><p>List your last 5 work activities. Score each. Identify what to delegate this week.</p></div></div></div></div>
+
+    <div class="module" id="mod-infinite"><div class="module-header" onclick="toggleModule(this)"><div><h3>7. The Infinite Game</h3><div class="subtitle">Simon Sinek &bull; Long-term thinking</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon">1</div><p><strong>Finite games have winners and losers.</strong> Business is infinite &mdash; there's no final "win."</p></div><div class="key-point"><div class="key-point-icon">2</div><p><strong>Play to outlast, not to beat.</strong> Build something that sustains.</p></div><div class="key-point"><div class="key-point-icon">3</div><p><strong>Worthy rivals, not competitors.</strong> Learn from others who do things well.</p></div></div><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/23480b28-v12044gd0000d7nce6vog65tfk0mk9ag.MP4" type="video/mp4"></video></div><div class="video-container"><video controls preload="metadata"><source src="videos/0be77969-v12044gd0000d7nvnfvog65uehg8kmig.MP4" type="video/mp4"></video></div></div><div class="discussion"><div class="discussion-label">Discussion Question</div><p>"Where are we playing a finite game when we should be playing infinite?"</p></div></div></div></div>
+
+    <div class="module" id="mod-close"><div class="module-header" onclick="toggleModule(this)"><div><h3>8. Closing Thoughts</h3><div class="subtitle">Execution &bull; Final inspiration</div></div><button class="module-toggle">+</button></div><div class="module-body"><div class="module-content"><div class="video-row"><div class="video-container"><video controls preload="metadata"><source src="videos/9cbf4e87-v12044gd0000d7nvvbnog65t026p5b30.MP4" type="video/mp4"></video></div><div class="video-container"><video controls preload="metadata"><source src="videos/d77697de-v12044gd0000d7q1gvvog65mpajemqjg.MP4" type="video/mp4"></video></div></div></div></div></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="hr">
+  <div class="section-header">
+    <div class="section-number" style="background: rgba(244,114,182,0.15); color: var(--accent-pink);">HR Essentials</div>
+    <h2>Buzzwords & Situations</h2>
+    <p>Know the terms. Know when to call HR. You don't need to be HR &mdash; you need to know when to call them.</p>
+  </div>
+  <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-pink);">HR Buzzwords &mdash; Click to Reveal</h3>
+  <div class="buzzword-grid">
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">At-Will Employment</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Either party can end the relationship at any time, for any legal reason. Doesn't mean you can fire for illegal reasons.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Constructive Feedback</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Feedback focused on specific behaviors and impact. Not "you're bad" but "when you do X, the impact is Y, suggest Z."</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Progressive Discipline</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Stepped approach: verbal warning &rarr; written warning &rarr; final warning &rarr; termination. Document every step.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Hostile Work Environment</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Unwelcome conduct based on protected characteristic, severe or pervasive enough to create intimidating environment.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Reasonable Accommodation</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Modification enabling a qualified person with a disability to perform essential functions. Interactive process with HR.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Documentation</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Written records of issues, conversations, warnings. If it wasn't documented, it didn't happen. Date it, be specific.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Performance Improvement Plan (PIP)</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Formal, time-bound document with specific gaps, expected improvements, support, and consequences. 30-90 days.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Protected Class</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Groups protected by law: race, color, religion, sex, national origin, age (40+), disability, genetic info, veteran status.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Retaliation</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Punishing an employee for protected activity. #1 EEOC charge. Watch for subtle forms.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Disparate Impact</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">A neutral policy that disproportionately affects a protected group. Intent doesn't matter &mdash; impact does.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">FMLA</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Up to 12 weeks unpaid, job-protected leave per year. Don't ask medical details &mdash; route to HR.</div></div>
+    <div class="buzzword-card" onclick="this.classList.toggle('revealed')"><div class="buzzword-term">Undue Hardship</div><div class="reveal-hint">Click to reveal</div><div class="buzzword-def">Threshold for denying accommodation. High bar &mdash; most accommodations are low/no cost. Engage HR before denying.</div></div>
+  </div>
+
+  <div class="section-divider"></div>
+  <h3 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--accent-pink);">Tabletop Scenarios &mdash; What Would You Do?</h3>
+  <p style="color: var(--text-dim); margin-bottom: 1.5rem; font-style: italic;">"You don't need to be HR &mdash; you need to know when to call HR."</p>
+
+  <div class="scenario" onclick="this.classList.toggle('revealed')"><div class="scenario-title">&#9888;&#65039; Scenario 1: The Complaint</div><div class="scenario-situation">A direct report tells you a peer made an off-color joke about their religion. What do you do?</div><button class="reveal-btn">Reveal Best Response</button><div class="scenario-answer"><h4>The Right Move</h4><p>Thank them. Don't dismiss or investigate yourself. Document what they said. Contact HR within 24 hours. Don't promise confidentiality you can't guarantee.</p></div></div>
+
+  <div class="scenario" onclick="this.classList.toggle('revealed')"><div class="scenario-title">&#9888;&#65039; Scenario 2: The Accommodation</div><div class="scenario-situation">A team member discloses ADHD and asks for flexible schedule. What's appropriate to ask?</div><button class="reveal-btn">Reveal Best Response</button><div class="scenario-answer"><h4>The Right Move</h4><p>CAN ask: what schedule changes help, essential functions, coverage. CANNOT ask: diagnosis details, medication, treatment. Route to HR for interactive process.</p></div></div>
+
+  <div class="scenario" onclick="this.classList.toggle('revealed')"><div class="scenario-title">&#9888;&#65039; Scenario 3: The Performance Issue</div><div class="scenario-situation">You've coached someone for 3 months with no improvement. What's next?</div><button class="reveal-btn">Reveal Best Response</button><div class="scenario-answer"><h4>The Right Move</h4><p>Move to formal documentation. Write specific gaps with examples. Contact HR about a PIP with measurable goals and clear timeline.</p></div></div>
+
+  <div class="scenario" onclick="this.classList.toggle('revealed')"><div class="scenario-title">&#9888;&#65039; Scenario 4: The "Off the Record"</div><div class="scenario-situation">A report says "Can I tell you something off the record?" before sharing concerns. How do you respond?</div><button class="reveal-btn">Reveal Best Response</button><div class="scenario-answer"><h4>The Right Move</h4><p>Be honest BEFORE they share: "I can't promise off the record if it involves harassment, discrimination, or safety." Then listen. Never promise what you can't deliver.</p></div></div>
+
+  <div class="scenario" onclick="this.classList.toggle('revealed')"><div class="scenario-title">&#9888;&#65039; Scenario 5: The Escalation Call</div><div class="scenario-situation">When do you loop in HR vs handle it yourself?</div><button class="reveal-btn">Reveal Framework</button><div class="scenario-answer"><h4>The Decision Framework</h4><p><strong>Handle yourself:</strong> Routine coaching, scheduling, workload, skill development.<br><br><strong>Loop in HR:</strong> Discrimination, harassment, retaliation, ADA, FMLA, threats, legal claims, termination.<br><br><strong>Rule of thumb:</strong> "When in doubt, document and call HR."</p></div></div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="coding">
+  <div class="section-header">
+    <div class="section-number" style="background: rgba(16,185,129,0.15); color: var(--accent-green);">Block 2</div>
+    <h2>Site Coding &mdash; ThePortal</h2>
+    <p>Collaborative hands-on session on ecodemo.app. Pair up, build, ship.</p>
+  </div>
+  <div class="modules">
+    <div class="module open"><div class="module-header"><div><h3>Session Structure</h3><div class="subtitle">2 hours &bull; Driver/Navigator rotation</div></div></div><div class="module-body" style="max-height: 2000px;"><div class="module-content"><div class="key-points"><div class="key-point"><div class="key-point-icon" style="background: rgba(16,185,129,0.15); color: var(--accent-green);">1</div><p><strong>12:45 &ndash; 12:55 | Frame the work.</strong> Pull up ecodemo.app. Walk through what we're tackling.</p></div><div class="key-point"><div class="key-point-icon" style="background: rgba(16,185,129,0.15); color: var(--accent-green);">2</div><p><strong>12:55 &ndash; 2:15 | Pair programming.</strong> Rotate driver/navigator every 20 min. Brian floats between pairs.</p></div><div class="key-point"><div class="key-point-icon" style="background: rgba(16,185,129,0.15); color: var(--accent-green);">3</div><p><strong>Focus areas:</strong> UI/UX review, bug fixes, feature work, demo-readiness check.</p></div><div class="key-point"><div class="key-point-icon" style="background: rgba(16,185,129,0.15); color: var(--accent-green);">4</div><p><strong>2:15 &ndash; 2:45 | Demos & decisions.</strong> Each pair shows what they touched.</p></div></div></div></div></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<section class="section" id="action-plan">
+  <div class="section-header">
+    <div class="section-number" style="background: var(--cyan-dim); color: var(--cyan);">Close</div>
+    <h2>30-Day Action Plan</h2>
+    <p>Leave with commitments, not just concepts.</p>
+  </div>
+  <div class="action-plan">
+    <h3>My 30-Day Commitments</h3>
+    <div class="action-grid">
+      <div class="action-card"><h4>&#x2795; One thing I'll start doing</h4><p>What new leadership behavior will you adopt this month?</p></div>
+      <div class="action-card"><h4>&#x1F6D1; One thing I'll stop doing</h4><p>What habit or $10/hr task will you eliminate or delegate?</p></div>
+      <div class="action-card"><h4>&#x1F91D; One person I'll invest in</h4><p>Who on your team needs more of your time? What quadrant are they in?</p></div>
+      <div class="action-card"><h4>&#x1F4CB; My accountability partner</h4><p>Who in this room will you check in with in 30 days?</p></div>
+    </div>
+  </div>
+  <div class="discussion" style="margin-top: 2rem;"><div class="discussion-label">Closing Round</div><p>Each manager shares: one win from today, one challenge they're taking on, and their commitment.</p></div>
+</section>
+
+<div class="footer">
+  <p>Tactical Management & Leadership Course &bull; Motorola Solutions Eco Demo Team &bull; 2026</p>
+  <p style="margin-top: 0.5rem; opacity: 0.5;">Built for Brian Long's Manager Meeting</p>
+</div>
+
+<script>
+  function toggleModule(header) { header.closest('.module').classList.toggle('open'); }
+  window.addEventListener('scroll', () => {
+    const p = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('progress').style.width = p + '%';
+  });
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.getAttribute('id'); });
+    navLinks.forEach(a => { a.classList.remove('active'); if (a.getAttribute('href') === '#' + current) a.classList.add('active'); });
+  });
+</script>
+</body>
+</html>
