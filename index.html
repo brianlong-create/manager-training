@@ -1086,12 +1086,14 @@
       }
 
   // === NASHVILLE MEETING TRELLO INTEGRATION ===
-  // Uses the same Trello key as the existing OAuth flow (the key is
-  // public per Trello docs — it's already in the Trello.authorize script
-  // tag in <head>). The token is fetched at runtime via authTrello()
-  // (popup OAuth) and persisted to localStorage by trello/client.js, so
-  // no secret ships in the static HTML. GitHub Push Protection rightly
-  // blocks committing the token.
+  // Hardcoded team credentials reused from ThePortal/trelloApi.js. The
+  // token is explicitly allowlisted in this repo's GitHub Push
+  // Protection settings — internal Motorola Solutions team tool, same
+  // exposure profile as ThePortal's client bundle.
+  // OAuth flow stays wired as a fallback: if the hardcoded token ever
+  // expires/rotates, a 401 from nashLoad() clears it and the user can
+  // click "Connect Trello" to re-auth on the fly.
+  const TRELLO_TOKEN_HARDCODED = 'ATTAdc1c12518338fdcc9403c421aa4a29a8f33b29a86da0ab801722efd521dd429525E5ABC1';
   const NASH_BOARD_ID  = 'XS9cdj46';
   const NASH_LIST_NAME = 'Reminders / Notes';
   let NASH_LIST_ID = null;
@@ -1169,14 +1171,26 @@
     if (!document.getElementById('nash-widget')) return;
     if (!nashCredentialsReady()) {
       nashStatus('pending', 'Not connected');
+      var bar0 = document.getElementById('nash-connect-bar');
+      if (bar0) bar0.style.display = 'flex';
       return;
     }
     var bar = document.getElementById('nash-connect-bar');
     if (bar) bar.style.display = 'none';
     nashStatus('pending', 'Loading…');
     try {
-      if (!NASH_LIST_ID) NASH_LIST_ID = await nashFindListId();
+      if (!NASH_LIST_ID) {
+        var listsR = await nashApi('/boards/' + NASH_BOARD_ID + '/lists?filter=open&fields=name');
+        if (listsR.status === 401) throw new Error('AUTH');
+        if (!listsR.ok) throw new Error('HTTP ' + listsR.status + ' fetching lists');
+        var lists = await listsR.json();
+        var target = NASH_LIST_NAME.toLowerCase();
+        var match = lists.find(function(l) { return (l.name || '').trim().toLowerCase() === target; });
+        if (!match) throw new Error('List "' + NASH_LIST_NAME + '" not found on board ' + NASH_BOARD_ID);
+        NASH_LIST_ID = match.id;
+      }
       var r = await nashApi('/lists/' + NASH_LIST_ID + '/cards?fields=name,desc,dueComplete,due');
+      if (r.status === 401) throw new Error('AUTH');
       if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching cards');
       var cards = await r.json();
       nashRenderCards(cards);
@@ -1185,6 +1199,15 @@
       });
       nashStatus('ready', cards.length + ' cards · live');
     } catch (e) {
+      if (e && e.message === 'AUTH') {
+        console.warn('[nash] hardcoded token rejected (401) — falling back to OAuth');
+        try { if (localStorage.getItem('trello_token') === TRELLO_TOKEN_HARDCODED) localStorage.removeItem('trello_token'); } catch (_) {}
+        trelloToken = null;
+        nashStatus('error', 'Token expired — click Connect Trello');
+        var barAuth = document.getElementById('nash-connect-bar');
+        if (barAuth) barAuth.style.display = 'flex';
+        return;
+      }
       nashStatus('error', 'Error: ' + e.message);
       console.error('[nash] load failed:', e);
     }
@@ -1239,10 +1262,25 @@
     return false;
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', nashLoad);
-  } else {
+  function nashBoot() {
+    // Seed with the hardcoded team token if the user doesn't already
+    // have a (possibly newer) OAuth token in localStorage. OAuth flow
+    // remains as a fallback if the hardcoded token ever 401s.
+    if (!trelloToken) {
+      try {
+        var stored = localStorage.getItem('trello_token');
+        trelloToken = stored || TRELLO_TOKEN_HARDCODED;
+      } catch (_) {
+        trelloToken = TRELLO_TOKEN_HARDCODED;
+      }
+    }
     nashLoad();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', nashBoot);
+  } else {
+    nashBoot();
   }
 
   // === FLOATING AGENDA SIDECAR ===
