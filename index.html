@@ -218,6 +218,33 @@
       .trello-attachment { font-size: 0.7rem; color: var(--cyan); background: rgba(0,229,255,0.08); padding: 2px 8px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; gap: 3px; }
       .trello-attachment:hover { background: rgba(0,229,255,0.15); }
       #trello-static-fallback { transition: opacity 0.3s; }
+
+  /* Floating agenda sidecar */
+  .sidecar { position: fixed; right: 24px; top: 96px; width: 280px; max-height: calc(100vh - 120px); overflow-y: auto; background: rgba(17,24,39,0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border); border-radius: 14px; padding: 14px; z-index: 90; box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; font-size: 0.85rem; }
+  .sidecar.visible { display: block; animation: sidecar-in 0.25s ease-out; }
+  @keyframes sidecar-in { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+  .sidecar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .sidecar-title { font-size: 0.72rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; }
+  .sidecar-clock { font-size: 0.72rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+  .sidecar-status { display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 8px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; }
+  .sidecar-status.on-time { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+  .sidecar-status.behind { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+  .sidecar-status.ahead { background: rgba(59,130,246,0.12); color: #3b82f6; border: 1px solid rgba(59,130,246,0.4); }
+  .sidecar-status.idle { background: rgba(148,163,184,0.1); color: var(--text-dim); border: 1px solid var(--border); }
+  .sidecar-status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+  .sidecar-row { display: grid; grid-template-columns: 56px 1fr; gap: 8px; padding: 7px 8px; border-radius: 8px; margin-bottom: 2px; border: 1px solid transparent; transition: background 0.15s, border-color 0.15s; }
+  .sidecar-row.clickable { cursor: pointer; }
+  .sidecar-row.clickable:hover { background: rgba(255,255,255,0.04); border-color: rgba(0,229,255,0.25); }
+  .sidecar-row.now { background: rgba(0,229,255,0.08); border-color: rgba(0,229,255,0.45); }
+  .sidecar-row.now .sidecar-row-time { color: var(--cyan); }
+  .sidecar-row.now .sidecar-row-title { color: var(--text-bright); }
+  .sidecar-row.past { opacity: 0.45; }
+  .sidecar-row-time { font-size: 0.7rem; font-weight: 700; color: var(--text-dim); font-variant-numeric: tabular-nums; line-height: 1.25; }
+  .sidecar-row-title { font-size: 0.78rem; color: var(--text); line-height: 1.3; }
+  .sidecar-row-dur { font-size: 0.65rem; color: var(--text-dim); margin-top: 2px; }
+  .sidecar::-webkit-scrollbar { width: 6px; }
+  .sidecar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  @media (max-width: 1100px) { .sidecar.visible { display: none; } }
 </style>
     <script src="https://api.trello.com/1/client.js?key=331b6d8e45165ca6acb49fd4b24cd878"></script>
 </head>
@@ -983,6 +1010,162 @@
         document.getElementById('trello-toolbar').style.display = 'flex';
         loadTrelloBoard();
       }
+
+  // === FLOATING AGENDA SIDECAR ===
+  // Times are 24h minutes-since-midnight. Block 2 is 12:45-2:45 PM (assume PM after Block 1).
+  const AGENDA = [
+    { start: 9*60+0,   end: 9*60+15,  title: 'Welcome & Day Framing',     section: null,           short: '15 min' },
+    { start: 9*60+15,  end: 10*60+30, title: 'Block 1: Leadership + HR',  section: 'leadership',   short: '75 min' },
+    { start: 10*60+30, end: 10*60+45, title: 'Stretch Break',             section: null,           short: '15 min' },
+    { start: 10*60+45, end: 11*60+30, title: 'Tactical Ops — Trello',     section: 'tactical-ops', short: '45 min' },
+    { start: 11*60+30, end: 12*60+45, title: 'Lunch (Offsite)',           section: null,           short: '75 min' },
+    { start: 12*60+45, end: 14*60+45, title: 'Block 2: Site Coding',      section: 'coding',       short: '2 hrs'  },
+    { start: 14*60+45, end: 15*60+0,  title: 'Break / Regroup',           section: null,           short: '15 min' },
+    { start: 15*60+0,  end: 15*60+30, title: 'Demos & Decisions',         section: 'coding',       short: '30 min' },
+    { start: 15*60+30, end: 16*60+0,  title: 'Close: Win / Challenge',    section: 'action-plan',  short: '30 min' }
+  ];
+
+  function fmtTime(mins) {
+    var h = Math.floor(mins/60), m = mins%60;
+    var ampm = h >= 12 ? 'pm' : 'am';
+    var h12 = h % 12 === 0 ? 12 : h % 12;
+    return h12 + ':' + (m<10?'0':'') + m + ampm;
+  }
+
+  function buildSidecar() {
+    var el = document.createElement('aside');
+    el.className = 'sidecar';
+    el.id = 'sidecar';
+    el.setAttribute('aria-label', 'Live agenda');
+    el.innerHTML =
+      '<div class="sidecar-header">' +
+        '<span class="sidecar-title">Live Agenda</span>' +
+        '<span class="sidecar-clock" id="sidecar-clock"></span>' +
+      '</div>' +
+      '<div class="sidecar-status idle" id="sidecar-status">' +
+        '<span class="sidecar-status-dot"></span><span id="sidecar-status-text">Idle</span>' +
+      '</div>' +
+      '<div id="sidecar-rows"></div>';
+    document.body.appendChild(el);
+
+    var rowsHtml = AGENDA.map(function(item, i) {
+      var clickable = item.section ? ' clickable' : '';
+      var attrs = item.section ? ' data-section="' + item.section + '" role="link" tabindex="0"' : '';
+      return '<div class="sidecar-row' + clickable + '" data-idx="' + i + '"' + attrs + '>' +
+        '<div class="sidecar-row-time">' + fmtTime(item.start) + '<br><span style="opacity:0.6;">' + fmtTime(item.end) + '</span></div>' +
+        '<div><div class="sidecar-row-title">' + item.title + '</div><div class="sidecar-row-dur">' + item.short + '</div></div>' +
+      '</div>';
+    }).join('');
+    document.getElementById('sidecar-rows').innerHTML = rowsHtml;
+
+    el.querySelectorAll('.sidecar-row.clickable').forEach(function(r) {
+      var sec = r.getAttribute('data-section');
+      r.addEventListener('click', function() { goToSection(sec); });
+      r.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToSection(sec); }
+      });
+    });
+    return el;
+  }
+
+  function nowMinutes() {
+    var d = new Date();
+    return d.getHours()*60 + d.getMinutes() + d.getSeconds()/60;
+  }
+
+  function clockAgendaIdx(nowMin) {
+    if (nowMin < AGENDA[0].start) return -1;
+    if (nowMin >= AGENDA[AGENDA.length-1].end) return AGENDA.length;
+    for (var i = 0; i < AGENDA.length; i++) {
+      if (nowMin >= AGENDA[i].start && nowMin < AGENDA[i].end) return i;
+    }
+    return -1;
+  }
+
+  function activeSectionId() {
+    var sections = document.querySelectorAll('section[id]');
+    var y = window.scrollY + 120;
+    var current = null;
+    sections.forEach(function(s) {
+      if (y >= s.offsetTop) current = s.getAttribute('id');
+    });
+    return current;
+  }
+
+  function positionAgendaIdx() {
+    var sec = activeSectionId();
+    if (!sec || sec === 'agenda' || sec === 'top') return -1;
+    for (var i = 0; i < AGENDA.length; i++) {
+      if (AGENDA[i].section === sec) return i;
+    }
+    return -1;
+  }
+
+  function updateSidecar() {
+    var el = document.getElementById('sidecar');
+    if (!el) return;
+    var sec = activeSectionId();
+    var onAgendaTab = (sec === 'agenda' || sec === 'top' || sec === null);
+    if (onAgendaTab) {
+      el.classList.remove('visible');
+      return;
+    }
+    el.classList.add('visible');
+
+    var now = nowMinutes();
+    var clockIdx = clockAgendaIdx(now);
+    var posIdx = positionAgendaIdx();
+
+    var clockEl = document.getElementById('sidecar-clock');
+    var d = new Date();
+    var hh = d.getHours(), mm = d.getMinutes();
+    var ampm = hh >= 12 ? 'pm' : 'am';
+    var h12 = hh % 12 === 0 ? 12 : hh % 12;
+    clockEl.textContent = h12 + ':' + (mm<10?'0':'') + mm + ampm;
+
+    var rows = el.querySelectorAll('.sidecar-row');
+    rows.forEach(function(r, i) {
+      r.classList.toggle('now', i === clockIdx);
+      r.classList.toggle('past', clockIdx >= 0 && i < clockIdx);
+    });
+
+    var statusEl = document.getElementById('sidecar-status');
+    var statusText = document.getElementById('sidecar-status-text');
+    statusEl.classList.remove('on-time','behind','ahead','idle');
+
+    if (clockIdx < 0) {
+      statusEl.classList.add('idle');
+      statusText.textContent = 'Before start';
+    } else if (clockIdx >= AGENDA.length) {
+      statusEl.classList.add('idle');
+      statusText.textContent = 'Session complete';
+    } else if (posIdx < 0) {
+      statusEl.classList.add('idle');
+      statusText.textContent = 'Scroll to a session';
+    } else if (posIdx === clockIdx) {
+      statusEl.classList.add('on-time');
+      statusText.textContent = 'On time';
+    } else if (posIdx < clockIdx) {
+      var delta = Math.round(now - AGENDA[posIdx].end);
+      if (delta < 1) delta = 1;
+      statusEl.classList.add('behind');
+      statusText.textContent = 'Behind by ' + delta + ' min';
+    } else {
+      var delta2 = Math.round(AGENDA[posIdx].start - now);
+      if (delta2 < 1) delta2 = 1;
+      statusEl.classList.add('ahead');
+      statusText.textContent = 'Ahead by ' + delta2 + ' min';
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { buildSidecar(); updateSidecar(); });
+  } else {
+    buildSidecar();
+    updateSidecar();
+  }
+  window.addEventListener('scroll', updateSidecar, { passive: true });
+  setInterval(updateSidecar, 30000);
 </script>
 </body>
 </html>
