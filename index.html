@@ -464,7 +464,11 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           Nashville Meeting &middot; Live Reminders
         </div>
-        <span id="nash-status" class="nash-status pending">Awaiting credentials</span>
+        <span id="nash-status" class="nash-status pending">Not connected</span>
+      </div>
+      <div id="nash-connect-bar" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0.5rem 0 0.75rem;padding:0.75rem 1rem;background:rgba(251,191,36,0.06);border:1px dashed rgba(251,191,36,0.35);border-radius:8px;">
+        <span style="font-size:0.82rem;color:var(--text);flex:1;min-width:200px;">Click to load live cards from Trello (one-time popup OAuth, token stored locally).</span>
+        <button onclick="nashConnect()" style="background:var(--section-ops);color:#000;border:none;padding:7px 16px;border-radius:6px;font-size:0.82rem;font-weight:700;cursor:pointer;">Connect Trello</button>
       </div>
       <div class="nash-meta">Source list: <strong style="color:var(--text);">Reminders / Notes</strong> &middot; Filter: cards starting with <code>nash</code> (case-insensitive)</div>
 
@@ -473,7 +477,7 @@
           <span class="nash-group-title pinned">&#128205; Nashville Meeting</span>
           <span class="nash-group-count" id="nash-pinned-count">&mdash;</span>
         </div>
-        <div class="nash-card-list" id="nash-pinned"><div class="nash-empty">Pending credentials. Once TRELLO_API_KEY and TRELLO_TOKEN are filled in, this populates from the live board.</div></div>
+        <div class="nash-card-list" id="nash-pinned"><div class="nash-empty">Click <strong>Connect for live board</strong> in the CTA below &mdash; cards populate once Trello OAuth completes.</div></div>
         <form class="nash-add-form" id="nash-pinned-form" onsubmit="nashAddCard(event, 'nash');">
           <input type="text" placeholder="New 'Nash - ...' card title" disabled id="nash-pinned-input">
           <button type="submit" disabled>Add</button>
@@ -732,6 +736,7 @@
           expiration: '30days',
           success: function() {
             trelloToken = Trello.token();
+            try { localStorage.setItem('trello_token', trelloToken); } catch (e) {}
             document.getElementById('trello-auth-btn').innerHTML = '&#x2705; Connected';
             document.getElementById('trello-auth-btn').style.background = '#22c55e';
             document.getElementById('trello-auth-btn').onclick = null;
@@ -739,6 +744,7 @@
             document.getElementById('trello-toolbar').style.display = 'flex';
             document.getElementById('trello-status').textContent = 'Loading board...';
             loadTrelloBoard();
+            if (typeof nashLoad === 'function') nashLoad();
           },
           error: function() {
             document.getElementById('trello-status').textContent = 'Authorization cancelled or failed.';
@@ -1076,21 +1082,22 @@
         document.getElementById('trello-refresh-btn').style.display = 'inline-block';
         document.getElementById('trello-toolbar').style.display = 'flex';
         loadTrelloBoard();
+        if (typeof nashLoad === 'function') nashLoad();
       }
 
-  // === NASHVILLE MEETING TRELLO SCAFFOLD ===
-  // TODO: TRELLO_API_KEY — paste here once user provides it (from https://trello.com/app-key)
-  // TODO: TRELLO_TOKEN   — paste here once user generates one (click "Token" link on the app-key page; needs read+write)
-  const TRELLO_API_KEY = 'TODO_TRELLO_API_KEY';
-  const TRELLO_TOKEN   = 'TODO_TRELLO_TOKEN';
+  // === NASHVILLE MEETING TRELLO INTEGRATION ===
+  // Uses the same Trello key as the existing OAuth flow (the key is
+  // public per Trello docs — it's already in the Trello.authorize script
+  // tag in <head>). The token is fetched at runtime via authTrello()
+  // (popup OAuth) and persisted to localStorage by trello/client.js, so
+  // no secret ships in the static HTML. GitHub Push Protection rightly
+  // blocks committing the token.
   const NASH_BOARD_ID  = 'XS9cdj46';
   const NASH_LIST_NAME = 'Reminders / Notes';
   let NASH_LIST_ID = null;
 
   function nashCredentialsReady() {
-    return TRELLO_API_KEY && TRELLO_TOKEN
-      && TRELLO_API_KEY.indexOf('TODO') !== 0
-      && TRELLO_TOKEN.indexOf('TODO') !== 0;
+    return typeof trelloToken !== 'undefined' && !!trelloToken;
   }
   function nashStatus(state, text) {
     var el = document.getElementById('nash-status');
@@ -1100,7 +1107,7 @@
   }
   function nashApi(path, opts) {
     var sep = path.indexOf('?') >= 0 ? '&' : '?';
-    var url = 'https://api.trello.com/1' + path + sep + 'key=' + TRELLO_API_KEY + '&token=' + TRELLO_TOKEN;
+    var url = 'https://api.trello.com/1' + path + sep + 'key=' + TRELLO_KEY + '&token=' + trelloToken;
     return fetch(url, opts || {});
   }
   function nashEsc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
@@ -1143,12 +1150,29 @@
       : '<div class="nash-empty">List is empty.</div>';
   }
 
+  function nashConnect() {
+    if (typeof authTrello === 'function') {
+      authTrello();
+    } else if (typeof Trello !== 'undefined') {
+      Trello.authorize({
+        type: 'popup', name: 'Manager Training', scope: { read:'true', write:'true' }, expiration: '30days',
+        success: function() {
+          trelloToken = Trello.token();
+          try { localStorage.setItem('trello_token', trelloToken); } catch (e) {}
+          nashLoad();
+        }
+      });
+    }
+  }
+
   async function nashLoad() {
     if (!document.getElementById('nash-widget')) return;
     if (!nashCredentialsReady()) {
-      nashStatus('pending', 'Awaiting credentials');
+      nashStatus('pending', 'Not connected');
       return;
     }
+    var bar = document.getElementById('nash-connect-bar');
+    if (bar) bar.style.display = 'none';
     nashStatus('pending', 'Loading…');
     try {
       if (!NASH_LIST_ID) NASH_LIST_ID = await nashFindListId();
@@ -1173,11 +1197,12 @@
     row.classList.toggle('completed', willBeComplete);
     try {
       checkbox.disabled = true;
-      var r = await nashApi('/cards/' + cardId, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dueComplete: willBeComplete })
-      });
+      // Cards without a due date won't visually "complete" in Trello, so
+      // when marking complete we also stamp today's date. Toggling back
+      // just flips dueComplete; the auto-set date stays (harmless).
+      var qs = 'dueComplete=' + willBeComplete;
+      if (willBeComplete) qs += '&due=' + encodeURIComponent(new Date().toISOString());
+      var r = await nashApi('/cards/' + cardId + '?' + qs, { method: 'PUT' });
       if (!r.ok) throw new Error('HTTP ' + r.status);
     } catch (e) {
       row.classList.toggle('completed', !willBeComplete);
