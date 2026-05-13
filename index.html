@@ -60,8 +60,11 @@
   .agenda-section h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; }
   .timeline { position: relative; padding-left: 60px; }
   .timeline::before { content: ''; position: absolute; left: 24px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--section-leadership), var(--section-hr), var(--section-coding), var(--section-ops)); }
-  .timeline-item { position: relative; margin-bottom: 1.5rem; padding: 1.25rem 1.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s; cursor: pointer; }
-  .timeline-item:hover { background: var(--card-hover); border-color: var(--cyan); transform: translateX(4px); }
+  .timeline-item { position: relative; margin-bottom: 1.5rem; padding: 1.25rem 1.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s; }
+  .timeline-item.clickable { cursor: pointer; }
+  .timeline-item.clickable:hover { background: var(--card-hover); border-color: var(--cyan); transform: translateX(4px); box-shadow: 0 4px 14px rgba(0,229,255,0.08); }
+  .timeline-item.clickable::after { content: '\2192'; position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--cyan); opacity: 0.45; font-size: 1.1rem; transition: all 0.2s; }
+  .timeline-item.clickable:hover::after { opacity: 1; transform: translateY(-50%) translateX(4px); }
   .timeline-item::before { content: ''; position: absolute; left: -44px; top: 1.5rem; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--cyan); background: var(--bg); }
   .timeline-time { font-size: 0.8rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.05em; }
   .timeline-title { font-size: 1.1rem; font-weight: 700; color: var(--text-bright); margin: 4px 0; }
@@ -236,14 +239,14 @@
   <h2>&#128197; Today's Agenda</h2>
   <div class="timeline">
     <div class="timeline-item"><div class="timeline-time">9:00 - 9:15</div><div class="timeline-title">Welcome & Day Framing</div><div class="timeline-desc">Quick standup-style intro. Each manager shares one word for how they're walking in.</div><span class="timeline-tag tag-break">15 min</span></div>
-    <div class="timeline-item" onclick="location.href='#leadership'"><div class="timeline-time">9:15 - 10:30</div><div class="timeline-title">Block 1: Leadership + HR + Videos</div><div class="timeline-desc">Condensed leadership frameworks, HR buzzwords flashcards, tabletop HR scenarios. Videos woven throughout.</div><span class="timeline-tag tag-leadership">75 min &bull; Leadership + HR</span></div>
+    <div class="timeline-item clickable" data-target="leadership" role="link" tabindex="0"><div class="timeline-time">9:15 - 10:30</div><div class="timeline-title">Block 1: Leadership + HR + Videos</div><div class="timeline-desc">Condensed leadership frameworks, HR buzzwords flashcards, tabletop HR scenarios. Videos woven throughout.</div><span class="timeline-tag tag-leadership">75 min &bull; Leadership + HR</span></div>
     <div class="timeline-item"><div class="timeline-time">10:30 - 10:45</div><div class="timeline-title">Stretch Break</div><div class="timeline-desc">Recharge before tactical ops.</div><span class="timeline-tag tag-break">15 min</span></div>
-    <div class="timeline-item"><div class="timeline-time">10:45 - 11:30</div><div class="timeline-title">Tactical Ops &mdash; Trello Deep Dive</div><div class="timeline-desc">Work through the Trello board. What's on fire, what's blocked, what needs decisions.</div><span class="timeline-tag tag-ops">45 min &bull; Tactical</span></div>
+    <div class="timeline-item clickable" data-target="tactical-ops" role="link" tabindex="0"><div class="timeline-time">10:45 - 11:30</div><div class="timeline-title">Tactical Ops &mdash; Trello Deep Dive</div><div class="timeline-desc">Work through the Trello board. What's on fire, what's blocked, what needs decisions.</div><span class="timeline-tag tag-ops">45 min &bull; Tactical</span></div>
     <div class="timeline-item"><div class="timeline-time">11:30 - 12:45</div><div class="timeline-title">Lunch (Offsite)</div><div class="timeline-desc">No work talk encouraged. Physical reset matters.</div><span class="timeline-tag tag-break">75 min &bull; Offsite</span></div>
-    <div class="timeline-item" onclick="location.href='#coding'"><div class="timeline-time">12:45 - 2:45</div><div class="timeline-title">Block 2: Site Coding &mdash; ThePortal / ecodemo.app</div><div class="timeline-desc">Collaborative coding session. Pair programming with driver/navigator rotation.</div><span class="timeline-tag tag-coding">2 hrs &bull; Hands-on</span></div>
+    <div class="timeline-item clickable" data-target="coding" role="link" tabindex="0"><div class="timeline-time">12:45 - 2:45</div><div class="timeline-title">Block 2: Site Coding &mdash; ThePortal / ecodemo.app</div><div class="timeline-desc">Collaborative coding session. Pair programming with driver/navigator rotation.</div><span class="timeline-tag tag-coding">2 hrs &bull; Hands-on</span></div>
     <div class="timeline-item"><div class="timeline-time">2:45 - 3:00</div><div class="timeline-title">Break / Regroup</div><div class="timeline-desc">Quick break before demos and close-out.</div><span class="timeline-tag tag-break">15 min</span></div>
     <div class="timeline-item"><div class="timeline-time">3:00 - 3:30</div><div class="timeline-title">Demos & Decisions</div><div class="timeline-desc">Each pair demos what they worked on. Group decides what ships.</div><span class="timeline-tag tag-coding">30 min</span></div>
-    <div class="timeline-item" onclick="location.href='#action-plan'"><div class="timeline-time">3:30 - 4:00</div><div class="timeline-title">Close: Win, Challenge, Commitment</div><div class="timeline-desc">Each manager shares one win, one challenge, and one commitment. 30-day action plans.</div><span class="timeline-tag tag-leadership">30 min</span></div>
+    <div class="timeline-item clickable" data-target="action-plan" role="link" tabindex="0"><div class="timeline-time">3:30 - 4:00</div><div class="timeline-title">Close: Win, Challenge, Commitment</div><div class="timeline-desc">Each manager shares one win, one challenge, and one commitment. 30-day action plans.</div><span class="timeline-tag tag-leadership">30 min</span></div>
   </div>
 </section>
 
@@ -498,7 +501,47 @@
 </div>
 
 <script>
-  function toggleModule(header) { const mod = header.closest('.module'); const wasOpen = mod.classList.contains('open'); document.querySelectorAll('.module.open').forEach(m => m.classList.remove('open')); if (!wasOpen) mod.classList.add('open'); }
+  function pauseVideosIn(root) {
+    if (!root) return;
+    root.querySelectorAll('video').forEach(v => { if (!v.paused) v.pause(); });
+  }
+  function pauseAllVideos() { pauseVideosIn(document); }
+
+  function toggleModule(header) {
+    const mod = header.closest('.module');
+    const wasOpen = mod.classList.contains('open');
+    document.querySelectorAll('.module.open').forEach(m => {
+      if (m !== mod) pauseVideosIn(m);
+      m.classList.remove('open');
+    });
+    if (!wasOpen) {
+      mod.classList.add('open');
+    } else {
+      pauseVideosIn(mod);
+    }
+  }
+
+  function goToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    pauseAllVideos();
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (history.replaceState) history.replaceState(null, '', '#' + id);
+  }
+
+  document.querySelectorAll('.timeline-item.clickable').forEach(item => {
+    const target = item.getAttribute('data-target');
+    if (!target) return;
+    item.addEventListener('click', () => goToSection(target));
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goToSection(target); }
+    });
+  });
+
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => pauseAllVideos());
+  });
+
   window.addEventListener('scroll', () => {
     const p = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
     document.getElementById('progress').style.width = p + '%';
