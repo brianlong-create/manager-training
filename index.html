@@ -219,6 +219,37 @@
       .trello-attachment:hover { background: rgba(0,229,255,0.15); }
       #trello-static-fallback { transition: opacity 0.3s; }
 
+  /* Nashville Meeting Trello scaffold */
+  .nash-widget { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin: 1.5rem 0; }
+  .nash-widget-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 8px; }
+  .nash-widget-title { display: flex; align-items: center; gap: 10px; font-size: 1.05rem; font-weight: 700; color: var(--text-bright); }
+  .nash-status { font-size: 0.72rem; padding: 4px 10px; border-radius: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+  .nash-status.pending { background: rgba(251,191,36,0.15); color: var(--accent-yellow); border: 1px solid rgba(251,191,36,0.35); }
+  .nash-status.error { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
+  .nash-status.ready { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.35); }
+  .nash-meta { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 1rem; }
+  .nash-meta code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; color: var(--cyan); font-family: 'SFMono-Regular',Consolas,monospace; font-size: 0.85em; }
+  .nash-group { margin-top: 1.25rem; }
+  .nash-group-header { display: flex; align-items: center; gap: 10px; margin-bottom: 0.5rem; padding: 0 4px; }
+  .nash-group-title { font-size: 0.78rem; font-weight: 700; color: var(--accent-yellow); text-transform: uppercase; letter-spacing: 0.08em; }
+  .nash-group-title.pinned { color: var(--cyan); }
+  .nash-group-count { font-size: 0.7rem; color: var(--text-dim); background: rgba(255,255,255,0.05); padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .nash-card-list { display: flex; flex-direction: column; gap: 6px; }
+  .nash-card { display: flex; align-items: flex-start; gap: 10px; padding: 0.65rem 0.85rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; transition: border-color 0.15s, background 0.15s; }
+  .nash-card:hover { border-color: rgba(0,229,255,0.3); background: var(--card-hover); }
+  .nash-card.completed { opacity: 0.45; }
+  .nash-card.completed .nash-card-title { text-decoration: line-through; }
+  .nash-card-check { width: 16px; height: 16px; accent-color: var(--accent-yellow); cursor: pointer; margin-top: 3px; flex-shrink: 0; }
+  .nash-card-title { font-size: 0.88rem; color: var(--text); line-height: 1.4; }
+  .nash-card-desc { font-size: 0.75rem; color: var(--text-dim); margin-top: 3px; line-height: 1.4; }
+  .nash-add-form { display: flex; gap: 6px; margin-top: 0.75rem; padding: 0 4px; }
+  .nash-add-form input { flex: 1; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; color: var(--text); font-size: 0.85rem; }
+  .nash-add-form input:focus { outline: none; border-color: var(--accent-yellow); }
+  .nash-add-form input:disabled { opacity: 0.4; cursor: not-allowed; }
+  .nash-add-form button { background: var(--section-ops); color: #000; border: none; padding: 7px 14px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+  .nash-add-form button:disabled { opacity: 0.35; cursor: not-allowed; }
+  .nash-empty { text-align: center; padding: 1.25rem; color: var(--text-dim); font-size: 0.82rem; font-style: italic; background: rgba(255,255,255,0.015); border: 1px dashed var(--border); border-radius: 8px; }
+
   /* Floating agenda sidecar */
   .sidecar { position: fixed; right: 24px; top: 96px; width: 280px; max-height: calc(100vh - 120px); overflow-y: auto; background: rgba(17,24,39,0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid var(--border); border-radius: 14px; padding: 14px; z-index: 90; box-shadow: 0 12px 40px rgba(0,0,0,0.45); display: none; font-size: 0.85rem; }
   .sidecar.visible { display: block; animation: sidecar-in 0.25s ease-out; }
@@ -426,6 +457,42 @@
     <div class="section-number" style="background: rgba(251,191,36,0.15); color: var(--accent-yellow);">Tactical Ops</div>
     <h2>Trello Deep Dive</h2>
     <p>Reminders &amp; Notes from the Management Board. What's on fire, what's blocked, what needs decisions.</p>
+
+    <div class="nash-widget" id="nash-widget">
+      <div class="nash-widget-header">
+        <div class="nash-widget-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Nashville Meeting &middot; Live Reminders
+        </div>
+        <span id="nash-status" class="nash-status pending">Awaiting credentials</span>
+      </div>
+      <div class="nash-meta">Source list: <strong style="color:var(--text);">Reminders / Notes</strong> &middot; Filter: cards starting with <code>nash</code> (case-insensitive)</div>
+
+      <div class="nash-group">
+        <div class="nash-group-header">
+          <span class="nash-group-title pinned">&#128205; Nashville Meeting</span>
+          <span class="nash-group-count" id="nash-pinned-count">&mdash;</span>
+        </div>
+        <div class="nash-card-list" id="nash-pinned"><div class="nash-empty">Pending credentials. Once TRELLO_API_KEY and TRELLO_TOKEN are filled in, this populates from the live board.</div></div>
+        <form class="nash-add-form" id="nash-pinned-form" onsubmit="nashAddCard(event, 'nash');">
+          <input type="text" placeholder="New 'Nash - ...' card title" disabled id="nash-pinned-input">
+          <button type="submit" disabled>Add</button>
+        </form>
+      </div>
+
+      <div class="nash-group">
+        <div class="nash-group-header">
+          <span class="nash-group-title">All cards &middot; Reminders / Notes</span>
+          <span class="nash-group-count" id="nash-all-count">&mdash;</span>
+        </div>
+        <div class="nash-card-list" id="nash-all"><div class="nash-empty">Pending credentials.</div></div>
+        <form class="nash-add-form" id="nash-all-form" onsubmit="nashAddCard(event, 'all');">
+          <input type="text" placeholder="New reminder / note" disabled id="nash-all-input">
+          <button type="submit" disabled>Add</button>
+        </form>
+      </div>
+    </div>
+
           <div id="trello-embed-card" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(0,229,255,0.04)); border: 1px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 1.75rem; margin: 2rem 0; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem;">
         <div style="flex: 1; min-width: 260px;">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
@@ -1010,6 +1077,148 @@
         document.getElementById('trello-toolbar').style.display = 'flex';
         loadTrelloBoard();
       }
+
+  // === NASHVILLE MEETING TRELLO SCAFFOLD ===
+  // TODO: TRELLO_API_KEY — paste here once user provides it (from https://trello.com/app-key)
+  // TODO: TRELLO_TOKEN   — paste here once user generates one (click "Token" link on the app-key page; needs read+write)
+  const TRELLO_API_KEY = 'TODO_TRELLO_API_KEY';
+  const TRELLO_TOKEN   = 'TODO_TRELLO_TOKEN';
+  const NASH_BOARD_ID  = 'XS9cdj46';
+  const NASH_LIST_NAME = 'Reminders / Notes';
+  let NASH_LIST_ID = null;
+
+  function nashCredentialsReady() {
+    return TRELLO_API_KEY && TRELLO_TOKEN
+      && TRELLO_API_KEY.indexOf('TODO') !== 0
+      && TRELLO_TOKEN.indexOf('TODO') !== 0;
+  }
+  function nashStatus(state, text) {
+    var el = document.getElementById('nash-status');
+    if (!el) return;
+    el.className = 'nash-status ' + state;
+    el.textContent = text;
+  }
+  function nashApi(path, opts) {
+    var sep = path.indexOf('?') >= 0 ? '&' : '?';
+    var url = 'https://api.trello.com/1' + path + sep + 'key=' + TRELLO_API_KEY + '&token=' + TRELLO_TOKEN;
+    return fetch(url, opts || {});
+  }
+  function nashEsc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+  function nashIsNashCard(card) { return (card.name || '').trim().toLowerCase().indexOf('nash') === 0; }
+
+  async function nashFindListId() {
+    var r = await nashApi('/boards/' + NASH_BOARD_ID + '/lists?filter=open&fields=name');
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching lists');
+    var lists = await r.json();
+    var target = NASH_LIST_NAME.toLowerCase();
+    var match = lists.find(function(l) { return (l.name || '').trim().toLowerCase() === target; });
+    if (!match) throw new Error('List "' + NASH_LIST_NAME + '" not found on board ' + NASH_BOARD_ID);
+    return match.id;
+  }
+
+  function nashRowHtml(c) {
+    var done = c.dueComplete ? ' checked' : '';
+    var cls = c.dueComplete ? ' completed' : '';
+    var desc = c.desc ? '<div class="nash-card-desc">' + nashEsc(c.desc).replace(/\n/g, '<br>') + '</div>' : '';
+    return '<div class="nash-card' + cls + '" data-id="' + c.id + '">' +
+      '<input type="checkbox" class="nash-card-check"' + done + ' onchange="nashToggleCard(\'' + c.id + '\', this)" title="Mark complete">' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div class="nash-card-title">' + nashEsc(c.name) + '</div>' +
+        desc +
+      '</div>' +
+    '</div>';
+  }
+
+  function nashRenderCards(cards) {
+    var pinned = cards.filter(nashIsNashCard);
+    var pinnedEl = document.getElementById('nash-pinned');
+    var allEl = document.getElementById('nash-all');
+    document.getElementById('nash-pinned-count').textContent = pinned.length;
+    document.getElementById('nash-all-count').textContent = cards.length;
+    pinnedEl.innerHTML = pinned.length
+      ? pinned.map(nashRowHtml).join('')
+      : '<div class="nash-empty">No cards starting with &quot;nash&quot; in this list yet.</div>';
+    allEl.innerHTML = cards.length
+      ? cards.map(nashRowHtml).join('')
+      : '<div class="nash-empty">List is empty.</div>';
+  }
+
+  async function nashLoad() {
+    if (!document.getElementById('nash-widget')) return;
+    if (!nashCredentialsReady()) {
+      nashStatus('pending', 'Awaiting credentials');
+      return;
+    }
+    nashStatus('pending', 'Loading…');
+    try {
+      if (!NASH_LIST_ID) NASH_LIST_ID = await nashFindListId();
+      var r = await nashApi('/lists/' + NASH_LIST_ID + '/cards?fields=name,desc,dueComplete,due');
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching cards');
+      var cards = await r.json();
+      nashRenderCards(cards);
+      document.querySelectorAll('#nash-widget .nash-add-form input, #nash-widget .nash-add-form button').forEach(function(el) {
+        el.disabled = false;
+      });
+      nashStatus('ready', cards.length + ' cards · live');
+    } catch (e) {
+      nashStatus('error', 'Error: ' + e.message);
+      console.error('[nash] load failed:', e);
+    }
+  }
+
+  async function nashToggleCard(cardId, checkbox) {
+    if (!nashCredentialsReady()) { checkbox.checked = !checkbox.checked; return; }
+    var row = checkbox.closest('.nash-card');
+    var willBeComplete = checkbox.checked;
+    row.classList.toggle('completed', willBeComplete);
+    try {
+      checkbox.disabled = true;
+      var r = await nashApi('/cards/' + cardId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dueComplete: willBeComplete })
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+    } catch (e) {
+      row.classList.toggle('completed', !willBeComplete);
+      checkbox.checked = !willBeComplete;
+      alert('Could not update card: ' + e.message);
+    } finally {
+      checkbox.disabled = false;
+    }
+  }
+
+  async function nashAddCard(event, kind) {
+    event.preventDefault();
+    if (!nashCredentialsReady()) return false;
+    var inputId = kind === 'nash' ? 'nash-pinned-input' : 'nash-all-input';
+    var input = document.getElementById(inputId);
+    var name = (input.value || '').trim();
+    if (!name) return false;
+    if (kind === 'nash' && name.toLowerCase().indexOf('nash') !== 0) name = 'Nash - ' + name;
+    try {
+      input.disabled = true;
+      var r = await nashApi('/cards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idList: NASH_LIST_ID, name: name, pos: 'bottom' })
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      input.value = '';
+      nashLoad();
+    } catch (e) {
+      alert('Could not add card: ' + e.message);
+    } finally {
+      input.disabled = false;
+    }
+    return false;
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', nashLoad);
+  } else {
+    nashLoad();
+  }
 
   // === FLOATING AGENDA SIDECAR ===
   // Times are 24h minutes-since-midnight. Block 2 is 12:45-2:45 PM (assume PM after Block 1).
