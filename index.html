@@ -364,10 +364,20 @@
     <div class="section-number" style="background: rgba(251,191,36,0.15); color: var(--accent-yellow);">Tactical Ops</div>
     <h2>Trello Deep Dive</h2>
     <p>Reminders &amp; Notes from the Management Board. What's on fire, what's blocked, what needs decisions.</p>
-          <div id="trello-connect" style="text-align:center; margin: 2rem 0;">
-        <button id="trello-auth-btn" onclick="authTrello()" style="background: var(--section-ops); color: #000; border: none; padding: 12px 28px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">&#x1f517; Connect to Trello</button>
-        <button id="trello-refresh-btn" onclick="loadTrelloBoard()" style="display:none; background: transparent; border: 1px solid var(--section-ops); color: var(--section-ops); padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; margin-left: 12px;">&#x21bb; Refresh</button>
-        <span id="trello-status" style="display:block; margin-top: 8px; color: var(--text-dim); font-size: 0.85rem;"></span>
+          <div id="trello-embed-card" style="background: linear-gradient(135deg, rgba(251,191,36,0.08), rgba(0,229,255,0.04)); border: 1px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 1.75rem; margin: 2rem 0; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem;">
+        <div style="flex: 1; min-width: 260px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-yellow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+            <h3 style="margin: 0; color: var(--text-bright); font-size: 1.1rem;">Management Board</h3>
+          </div>
+          <p style="color: var(--text-dim); font-size: 0.9rem; margin: 0;">Live Trello board with all Reminders &amp; Notes. Snapshot below is grouped by topic for quick scanning during the deep-dive.</p>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="https://trello.com/b/XS9cdj46/management-board" target="_blank" rel="noopener" style="background: var(--section-ops); color: #000; padding: 12px 22px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: transform 0.15s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 18px rgba(251,191,36,0.35)'" onmouseout="this.style.transform='';this.style.boxShadow=''">&#x1f517; Open in Trello</a>
+          <button id="trello-auth-btn" onclick="authTrello()" style="background: transparent; color: var(--section-ops); border: 1px solid rgba(251,191,36,0.4); padding: 12px 18px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='rgba(251,191,36,0.08)'" onmouseout="this.style.background='transparent'">Connect for live board</button>
+          <button id="trello-refresh-btn" onclick="loadTrelloBoard()" style="display:none; background: transparent; border: 1px solid var(--section-ops); color: var(--section-ops); padding: 10px 18px; border-radius: 8px; font-size: 0.9rem; cursor: pointer;">&#x21bb; Refresh</button>
+        </div>
+        <span id="trello-status" style="flex-basis: 100%; color: var(--text-dim); font-size: 0.82rem; margin-top: -0.5rem;"></span>
       </div>
       <div id="trello-toolbar" style="display:none;" class="trello-toolbar">
         <input type="text" class="trello-search" id="trello-search" placeholder="Search cards..." oninput="filterTrelloCards()">
