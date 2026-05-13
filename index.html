@@ -735,21 +735,21 @@
 
             return '<div class="trello-card'+(card.dueComplete?' completed':'')+'" id="card-'+card.id+'">' +
               '<div class="trello-card-header">' +
-                '<input type="checkbox" class="trello-card-check" '+(card.dueComplete?'checked ':'')+' onchange="toggleCardComplete(''+card.id+'', this)" title="Toggle complete">' +
+                '<input type="checkbox" class="trello-card-check" '+(card.dueComplete?'checked ':'')+' onchange="toggleCardComplete(\''+card.id+'\', this)" title="Toggle complete">' +
                 '<span class="trello-card-title">'+esc(card.name)+'</span>' +
               '</div>' +
               (card.desc ? '<div class="trello-card-desc">'+esc(card.desc).replace(/\n/g,'<br>')+'</div>' : '') +
               (labels ? '<div class="trello-card-meta"><div class="trello-card-labels">'+labels+'</div>'+dueHtml+(membersHtml?'<div class="trello-card-members">'+membersHtml+'</div>':'')+'</div>' : (dueHtml || membersHtml ? '<div class="trello-card-meta">'+dueHtml+(membersHtml?'<div class="trello-card-members">'+membersHtml+'</div>':'')+'</div>' : '')) +
               checkHtml + badgesHtml + attachHtml +
               '<div style="margin-top:0.5rem;display:flex;align-items:center;gap:6px;">' +
-                '<select class="trello-move-select" onchange="moveCard(''+card.id+'', this.value)" title="Move to list">'+moveOptions+'</select>' +
-                '<button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.8rem;" onclick="toggleComments(''+card.id+'')">&#x1f4ac; Comments</button>' +
+                '<select class="trello-move-select" onchange="moveCard(\''+card.id+'\', this.value)" title="Move to list">'+moveOptions+'</select>' +
+                '<button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.8rem;" onclick="toggleComments(\''+card.id+'\')">&#x1f4ac; Comments</button>' +
               '</div>' +
               '<div class="trello-card-comments-section" id="comments-'+card.id+'">' +
                 (commentsHtml || '<p style="color:var(--text-dim);font-size:0.75rem;opacity:0.5;">No comments yet</p>') +
                 '<div class="trello-add-comment">' +
-                  '<input type="text" id="comment-input-'+card.id+'" placeholder="Add comment..." onkeydown="if(event.key==='Enter')addComment(''+card.id+'')">' +
-                  '<button onclick="addComment(''+card.id+'')">Post</button>' +
+                  '<input type="text" id="comment-input-'+card.id+'" placeholder="Add comment..." onkeydown="if(event.key===\'Enter\')addComment(\''+card.id+'\')">' +
+                  '<button onclick="addComment(\''+card.id+'\')">Post</button>' +
                 '</div>' +
               '</div>' +
             '</div>';
@@ -759,7 +759,7 @@
             '<div class="trello-list-header"><span class="trello-list-title">'+esc(list.name)+'</span><span class="trello-list-count">'+listCards.length+'</span></div>' +
             '<div class="trello-list-cards">'+cardsHtml+'</div>' +
             '<div class="trello-add-card-form">' +
-              '<button class="trello-add-card-btn" onclick="showNewCard(''+list.id+'', this)">+ Add a card</button>' +
+              '<button class="trello-add-card-btn" onclick="showNewCard(\''+list.id+'\', this)">+ Add a card</button>' +
             '</div>' +
           '</div>';
         }).join('');
@@ -776,15 +776,15 @@
         var form = btn.parentElement;
         form.innerHTML = '<textarea class="trello-new-card-input" id="new-card-'+listId+'" placeholder="Card title..."></textarea>' +
           '<div class="trello-new-card-actions">' +
-            '<button class="save" onclick="createCard(''+listId+'')">Add Card</button>' +
-            '<button class="cancel" onclick="cancelNewCard(''+listId+'', this)">Cancel</button>' +
+            '<button class="save" onclick="createCard(\''+listId+'\')">Add Card</button>' +
+            '<button class="cancel" onclick="cancelNewCard(\''+listId+'\', this)">Cancel</button>' +
           '</div>';
         form.querySelector('textarea').focus();
       }
 
       function cancelNewCard(listId, btn) {
         var form = btn.closest('.trello-add-card-form');
-        form.innerHTML = '<button class="trello-add-card-btn" onclick="showNewCard(''+listId+'', this)">+ Add a card</button>';
+        form.innerHTML = '<button class="trello-add-card-btn" onclick="showNewCard(\''+listId+'\', this)">+ Add a card</button>';
       }
 
       async function createCard(listId) {
