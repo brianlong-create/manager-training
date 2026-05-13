@@ -131,28 +131,73 @@
   .footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 0.85rem; }
   @media (max-width: 768px) { .nav-links { display: none; } .hero h1 { font-size: 2rem; } .hero-stats { gap: 1rem; } .timeline { padding-left: 40px; } .timeline::before { left: 14px; } .timeline-item::before { left: -34px; } .buzzword-grid { grid-template-columns: 1fr; } .video-container { max-width: 100%; } }
 
-      /* Trello Live Cards */
-      .trello-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem; transition: all 0.3s; }
-      .trello-card:hover { border-color: var(--section-ops); }
-      .trello-card.completed { opacity: 0.5; text-decoration: line-through; }
-      .trello-card-header { display: flex; align-items: flex-start; gap: 12px; }
-      .trello-card-check { width: 22px; height: 22px; accent-color: var(--section-ops); cursor: pointer; margin-top: 2px; flex-shrink: 0; }
-      .trello-card-title { font-weight: 600; color: var(--text); font-size: 1rem; flex: 1; }
-      .trello-card-desc { color: var(--text-dim); font-size: 0.85rem; margin: 0.5rem 0 0 34px; line-height: 1.5; }
-      .trello-card-labels { display: flex; gap: 6px; margin: 0.5rem 0 0 34px; flex-wrap: wrap; }
-      .trello-card-label { padding: 2px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-      .trello-card-comments { margin: 1rem 0 0 34px; border-top: 1px solid var(--border); padding-top: 0.8rem; }
-      .trello-comment { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 0.6rem 0.8rem; margin-bottom: 0.5rem; font-size: 0.85rem; }
-      .trello-comment-author { color: var(--cyan); font-weight: 600; font-size: 0.8rem; }
-      .trello-comment-text { color: var(--text-dim); margin-top: 4px; }
-      .trello-comment-date { color: var(--text-dim); font-size: 0.7rem; opacity: 0.6; }
-      .trello-add-comment { display: flex; gap: 8px; margin-top: 0.5rem; }
-      .trello-add-comment input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px; color: var(--text); font-size: 0.85rem; }
+/* Trello Kanban Board */
+      .trello-board { display: flex; gap: 1rem; overflow-x: auto; padding: 1rem 0 1.5rem; min-height: 400px; }
+      .trello-board::-webkit-scrollbar { height: 8px; }
+      .trello-board::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+      .trello-list { min-width: 300px; max-width: 320px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; max-height: 70vh; }
+      .trello-list-header { padding: 1rem 1rem 0.75rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+      .trello-list-title { font-weight: 700; font-size: 0.95rem; color: var(--text-bright); }
+      .trello-list-count { font-size: 0.75rem; color: var(--text-dim); background: rgba(255,255,255,0.08); padding: 2px 8px; border-radius: 10px; }
+      .trello-list-cards { padding: 0.75rem; overflow-y: auto; flex: 1; }
+      .trello-list-cards::-webkit-scrollbar { width: 4px; }
+      .trello-list-cards::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+      .trello-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem; margin-bottom: 0.75rem; transition: all 0.2s; cursor: pointer; }
+      .trello-card:hover { border-color: var(--section-ops); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+      .trello-card.completed { opacity: 0.45; }
+      .trello-card.completed .trello-card-title { text-decoration: line-through; }
+      .trello-card-header { display: flex; align-items: flex-start; gap: 8px; }
+      .trello-card-check { width: 18px; height: 18px; accent-color: var(--section-ops); cursor: pointer; margin-top: 2px; flex-shrink: 0; }
+      .trello-card-title { font-weight: 600; color: var(--text); font-size: 0.9rem; flex: 1; line-height: 1.4; }
+      .trello-card-desc { color: var(--text-dim); font-size: 0.8rem; margin: 0.5rem 0 0 26px; line-height: 1.4; max-height: 60px; overflow: hidden; }
+      .trello-card-meta { display: flex; align-items: center; gap: 8px; margin: 0.6rem 0 0 26px; flex-wrap: wrap; }
+      .trello-card-labels { display: flex; gap: 4px; flex-wrap: wrap; }
+      .trello-card-label { padding: 1px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: 600; }
+      .trello-card-due { font-size: 0.7rem; padding: 2px 8px; border-radius: 4px; display: flex; align-items: center; gap: 3px; }
+      .trello-card-due.upcoming { background: rgba(251,191,36,0.15); color: var(--accent-yellow); }
+      .trello-card-due.overdue { background: rgba(239,68,68,0.2); color: #ef4444; }
+      .trello-card-due.complete { background: rgba(34,197,94,0.15); color: #22c55e; }
+      .trello-card-members { display: flex; gap: -4px; margin-left: auto; }
+      .trello-avatar { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--card); font-size: 0.6rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; margin-left: -6px; }
+      .trello-card-badges { display: flex; gap: 8px; font-size: 0.7rem; color: var(--text-dim); }
+      .trello-card-badges span { display: flex; align-items: center; gap: 3px; }
+      .trello-checklist-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin: 0.5rem 0 0 26px; overflow: hidden; }
+      .trello-checklist-fill { height: 100%; background: var(--accent-green); border-radius: 2px; transition: width 0.3s; }
+      .trello-card-comments-section { margin: 0.75rem 0 0 0; border-top: 1px solid var(--border); padding-top: 0.6rem; display: none; }
+      .trello-card-comments-section.open { display: block; }
+      .trello-comment { background: rgba(255,255,255,0.04); border-radius: 6px; padding: 0.5rem 0.7rem; margin-bottom: 0.4rem; font-size: 0.8rem; }
+      .trello-comment-author { color: var(--cyan); font-weight: 600; font-size: 0.75rem; }
+      .trello-comment-text { color: var(--text-dim); margin-top: 3px; line-height: 1.4; }
+      .trello-comment-date { color: var(--text-dim); font-size: 0.65rem; opacity: 0.5; margin-left: 6px; }
+      .trello-add-comment { display: flex; gap: 6px; margin-top: 0.4rem; }
+      .trello-add-comment input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px; color: var(--text); font-size: 0.8rem; }
       .trello-add-comment input:focus { border-color: var(--section-ops); outline: none; }
-      .trello-add-comment button { background: var(--section-ops); color: #000; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
-      .trello-loading { text-align: center; color: var(--text-dim); padding: 2rem; }
-      .trello-card-due { font-size: 0.75rem; color: var(--accent-orange); margin-left: auto; white-space: nowrap; }
-      .trello-card-due.overdue { color: #ef4444; }
+      .trello-add-comment button { background: var(--section-ops); color: #000; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.8rem; }
+      .trello-toolbar { display: flex; gap: 10px; align-items: center; margin: 1rem 0; flex-wrap: wrap; }
+      .trello-search { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; color: var(--text); font-size: 0.85rem; width: 250px; }
+      .trello-search:focus { border-color: var(--section-ops); outline: none; }
+      .trello-filter-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--text-dim); padding: 6px 14px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+      .trello-filter-btn:hover, .trello-filter-btn.active { border-color: var(--section-ops); color: var(--section-ops); background: rgba(251,191,36,0.1); }
+      .trello-add-card-form { padding: 0.75rem; }
+      .trello-add-card-btn { width: 100%; background: transparent; border: 1px dashed var(--border); color: var(--text-dim); padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+      .trello-add-card-btn:hover { border-color: var(--section-ops); color: var(--section-ops); }
+      .trello-new-card-input { width: 100%; background: var(--card); border: 1px solid var(--section-ops); border-radius: 8px; padding: 8px 10px; color: var(--text); font-size: 0.85rem; margin-bottom: 6px; resize: vertical; min-height: 60px; }
+      .trello-new-card-actions { display: flex; gap: 6px; }
+      .trello-new-card-actions button { padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; border: none; }
+      .trello-new-card-actions .save { background: var(--section-ops); color: #000; }
+      .trello-new-card-actions .cancel { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+      .trello-move-select { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; }
+      .trello-activity-feed { margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; }
+      .trello-activity-feed h3 { font-size: 1rem; color: var(--text-bright); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+      .trello-activity-item { display: flex; gap: 10px; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; }
+      .trello-activity-item:last-child { border-bottom: none; }
+      .trello-activity-avatar { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+      .trello-activity-text { color: var(--text-dim); line-height: 1.4; }
+      .trello-activity-text strong { color: var(--text); }
+      .trello-activity-time { color: var(--text-dim); opacity: 0.5; font-size: 0.7rem; margin-top: 2px; }
+      .trello-attachments { margin: 0.4rem 0 0 26px; display: flex; gap: 6px; flex-wrap: wrap; }
+      .trello-attachment { font-size: 0.7rem; color: var(--cyan); background: rgba(0,229,255,0.08); padding: 2px 8px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; gap: 3px; }
+      .trello-attachment:hover { background: rgba(0,229,255,0.15); }
       #trello-static-fallback { transition: opacity 0.3s; }
 </style>
     <script src="https://api.trello.com/1/client.js?key=331b6d8e45165ca6acb49fd4b24cd878"></script>
@@ -316,12 +361,21 @@
     <div class="section-number" style="background: rgba(251,191,36,0.15); color: var(--accent-yellow);">Tactical Ops</div>
     <h2>Trello Deep Dive</h2>
     <p>Reminders &amp; Notes from the Management Board. What's on fire, what's blocked, what needs decisions.</p>
-      <div id="trello-connect" style="text-align:center; margin: 2rem 0;">
+          <div id="trello-connect" style="text-align:center; margin: 2rem 0;">
         <button id="trello-auth-btn" onclick="authTrello()" style="background: var(--section-ops); color: #000; border: none; padding: 12px 28px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">&#x1f517; Connect to Trello</button>
-        <button id="trello-refresh-btn" onclick="loadTrelloCards()" style="display:none; background: transparent; border: 1px solid var(--section-ops); color: var(--section-ops); padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; margin-left: 12px;">&#x21bb; Refresh</button>
+        <button id="trello-refresh-btn" onclick="loadTrelloBoard()" style="display:none; background: transparent; border: 1px solid var(--section-ops); color: var(--section-ops); padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; cursor: pointer; margin-left: 12px;">&#x21bb; Refresh</button>
         <span id="trello-status" style="display:block; margin-top: 8px; color: var(--text-dim); font-size: 0.85rem;"></span>
       </div>
-      <div id="trello-live-cards" style="display:none;"></div>
+      <div id="trello-toolbar" style="display:none;" class="trello-toolbar">
+        <input type="text" class="trello-search" id="trello-search" placeholder="Search cards..." oninput="filterTrelloCards()">
+        <button class="trello-filter-btn active" onclick="setFilter('all', this)">All</button>
+        <button class="trello-filter-btn" onclick="setFilter('overdue', this)">Overdue</button>
+        <button class="trello-filter-btn" onclick="setFilter('due-soon', this)">Due Soon</button>
+        <button class="trello-filter-btn" onclick="setFilter('no-due', this)">No Date</button>
+        <span id="trello-card-count" style="margin-left: auto; font-size: 0.8rem; color: var(--text-dim);"></span>
+      </div>
+      <div id="trello-board" class="trello-board" style="display:none;"></div>
+      <div id="trello-activity" style="display:none;"></div>
   </div>
 
   <div class="modules">
@@ -473,11 +527,13 @@
 
 
 
-      // === TRELLO TWO-WAY INTEGRATION ===
+      // === TRELLO FULL BOARD INTEGRATION ===
       const TRELLO_KEY = '331b6d8e45165ca6acb49fd4b24cd878';
-      const BOARD_SHORT = 'XS9cdj46';
-      const REMINDERS_LIST = '686ec17ec90e4aacacf8d16a';
-      const COMPLETED_LIST = '689370e414654bb3875907a9';
+      const BOARD_ID = 'XS9cdj46';
+      let trelloToken = null;
+      let boardData = { lists: [], cards: [], members: [], actions: [] };
+      let currentFilter = 'all';
+      const AVATAR_COLORS = ['#3b82f6','#ef4444','#22c55e','#a78bfa','#f97316','#ec4899','#14b8a6','#f59e0b'];
 
       function authTrello() {
         if (typeof Trello === 'undefined') {
@@ -490,12 +546,14 @@
           scope: { read: 'true', write: 'true' },
           expiration: '30days',
           success: function() {
+            trelloToken = Trello.token();
             document.getElementById('trello-auth-btn').innerHTML = '&#x2705; Connected';
             document.getElementById('trello-auth-btn').style.background = '#22c55e';
             document.getElementById('trello-auth-btn').onclick = null;
             document.getElementById('trello-refresh-btn').style.display = 'inline-block';
-            document.getElementById('trello-status').textContent = 'Loading cards from Trello...';
-            loadTrelloCards();
+            document.getElementById('trello-toolbar').style.display = 'flex';
+            document.getElementById('trello-status').textContent = 'Loading board...';
+            loadTrelloBoard();
           },
           error: function() {
             document.getElementById('trello-status').textContent = 'Authorization cancelled or failed.';
@@ -503,110 +561,336 @@
         });
       }
 
-      async function loadTrelloCards() {
+      function trelloFetch(path, params) {
+        var sep = path.includes('?') ? '&' : '?';
+        var url = 'https://api.trello.com/1' + path + sep + 'key=' + TRELLO_KEY + '&token=' + trelloToken;
+        if (params) url += '&' + new URLSearchParams(params).toString();
+        return fetch(url);
+      }
+
+      async function loadTrelloBoard() {
         try {
-          const token = Trello.token();
-          const resp = await fetch('https://api.trello.com/1/lists/' + REMINDERS_LIST + '/cards?key=' + TRELLO_KEY + '&token=' + token + '&fields=name,desc,labels,due,dueComplete,idChecklists&actions=commentCard&actions_limit=5');
-          if (!resp.ok) throw new Error('Failed to fetch cards');
-          const cards = await resp.json();
-          renderTrelloCards(cards);
+          var [listsR, cardsR, membersR, actionsR] = await Promise.all([
+            trelloFetch('/boards/' + BOARD_ID + '/lists', {filter:'open'}),
+            trelloFetch('/boards/' + BOARD_ID + '/cards', {
+              fields:'name,desc,labels,due,dueComplete,idList,idMembers,idChecklists,badges',
+              attachments:'true',
+              actions:'commentCard',
+              actions_limit:'5',
+              checklists:'all'
+            }),
+            trelloFetch('/boards/' + BOARD_ID + '/members', {fields:'fullName,initials,avatarUrl'}),
+            trelloFetch('/boards/' + BOARD_ID + '/actions', {filter:'all', limit:'20', fields:'type,date,data,memberCreator'})
+          ]);
+          boardData.lists = await listsR.json();
+          boardData.cards = await cardsR.json();
+          boardData.members = await membersR.json();
+          boardData.actions = await actionsR.json();
+
+          var staticEl = document.getElementById('trello-static-fallback');
+          if (staticEl) staticEl.style.display = 'none';
+          document.getElementById('trello-board').style.display = 'flex';
+          document.getElementById('trello-toolbar').style.display = 'flex';
+          document.getElementById('trello-activity').style.display = 'block';
+          document.getElementById('trello-status').textContent = boardData.cards.length + ' cards across ' + boardData.lists.length + ' lists';
+          renderBoard();
+          renderActivity();
         } catch (e) {
           document.getElementById('trello-status').textContent = 'Error: ' + e.message;
+          console.error('Trello load error:', e);
         }
       }
 
-      function renderTrelloCards(cards) {
-        const container = document.getElementById('trello-live-cards');
-        const staticContent = document.getElementById('trello-static-fallback');
-        if (staticContent) staticContent.style.display = 'none';
-        container.style.display = 'block';
-        document.getElementById('trello-status').textContent = cards.length + ' cards loaded from Reminders / Notes';
+      function getMemberColor(id) { return AVATAR_COLORS[id.charCodeAt(0) % AVATAR_COLORS.length]; }
 
-        if (cards.length === 0) {
-          container.innerHTML = '<p style="text-align:center; color:var(--text-dim);">No cards in Reminders / Notes list.</p>';
-          return;
-        }
+      function getMemberById(id) { return boardData.members.find(function(m) { return m.id === id; }); }
 
-        container.innerHTML = cards.map(function(card) {
-          var labels = (card.labels || []).map(function(l) {
-            return '<span class="trello-card-label" style="background:' + (l.color === 'yellow' ? '#fbbf24' : l.color === 'green' ? '#22c55e' : l.color === 'red' ? '#ef4444' : l.color === 'blue' ? '#3b82f6' : l.color === 'purple' ? '#a78bfa' : l.color === 'orange' ? '#f97316' : '#666') + '; color:' + (l.color === 'yellow' ? '#000' : '#fff') + ';">' + (l.name || l.color) + '</span>';
-          }).join('');
+      function getInitials(member) { return member ? (member.initials || member.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase()) : '?'; }
 
-          var dueHTML = '';
-          if (card.due) {
-            var d = new Date(card.due);
-            var now = new Date();
-            var overdue = d < now && !card.dueComplete;
-            dueHTML = '<span class="trello-card-due' + (overdue ? ' overdue' : '') + '">' + (overdue ? '\u26a0 ' : '\ud83d\udcc5 ') + d.toLocaleDateString() + '</span>';
-          }
+      function labelColor(c) {
+        var m = {yellow:'#fbbf24',green:'#22c55e',red:'#ef4444',blue:'#3b82f6',purple:'#a78bfa',orange:'#f97316',pink:'#ec4899',sky:'#38bdf8',lime:'#84cc16',black:'#374151'};
+        return m[c] || '#666';
+      }
 
-          var comments = (card.actions || []).map(function(a) {
-            return '<div class="trello-comment"><span class="trello-comment-author">' + a.memberCreator.fullName + '</span> <span class="trello-comment-date">' + new Date(a.date).toLocaleDateString() + '</span><div class="trello-comment-text">' + a.data.text.replace(/</g, '&lt;') + '</div></div>';
-          }).join('');
+      function labelTextColor(c) { return (c === 'yellow' || c === 'lime' || c === 'sky') ? '#000' : '#fff'; }
 
-          return '<div class="trello-card" id="card-' + card.id + '">' +
-            '<div class="trello-card-header">' +
-              '<input type="checkbox" class="trello-card-check" onchange="markCardComplete(\'' + card.id + '\', this)" title="Mark complete &amp; move to archive">' +
-              '<span class="trello-card-title">' + card.name.replace(/</g, '&lt;') + '</span>' +
-              dueHTML +
-            '</div>' +
-            (card.desc ? '<div class="trello-card-desc">' + card.desc.replace(/</g, '&lt;').replace(/\n/g, '<br>') + '</div>' : '') +
-            (labels ? '<div class="trello-card-labels">' + labels + '</div>' : '') +
-            '<div class="trello-card-comments">' +
-              (comments || '<p style="color:var(--text-dim); font-size:0.8rem; opacity:0.5;">No comments yet</p>') +
-              '<div class="trello-add-comment">' +
-                '<input type="text" id="comment-' + card.id + '" placeholder="Add a comment..." onkeydown="if(event.key===\'Enter\')addTrelloComment(\'' + card.id + '\')">' +
-                '<button onclick="addTrelloComment(\'' + card.id + '\')">Post</button>' +
+      function dueClass(card) {
+        if (!card.due) return '';
+        if (card.dueComplete) return 'complete';
+        var d = new Date(card.due), now = new Date();
+        var diff = (d - now) / 86400000;
+        if (diff < 0) return 'overdue';
+        if (diff < 3) return 'upcoming';
+        return '';
+      }
+
+      function formatDate(d) { return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric'}); }
+
+      function timeAgo(d) {
+        var s = Math.floor((Date.now() - new Date(d)) / 1000);
+        if (s < 60) return 'just now';
+        if (s < 3600) return Math.floor(s/60) + 'm ago';
+        if (s < 86400) return Math.floor(s/3600) + 'h ago';
+        if (s < 604800) return Math.floor(s/86400) + 'd ago';
+        return formatDate(d);
+      }
+
+      function esc(s) { return s ? s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+
+      function matchesFilter(card) {
+        if (currentFilter === 'all') return true;
+        if (currentFilter === 'overdue') return card.due && !card.dueComplete && new Date(card.due) < new Date();
+        if (currentFilter === 'due-soon') { if (!card.due || card.dueComplete) return false; var diff = (new Date(card.due) - new Date())/86400000; return diff >= 0 && diff < 7; }
+        if (currentFilter === 'no-due') return !card.due;
+        return true;
+      }
+
+      function matchesSearch(card) {
+        var q = (document.getElementById('trello-search').value || '').toLowerCase();
+        if (!q) return true;
+        return (card.name||'').toLowerCase().includes(q) || (card.desc||'').toLowerCase().includes(q);
+      }
+
+      function setFilter(f, btn) {
+        currentFilter = f;
+        document.querySelectorAll('.trello-filter-btn').forEach(function(b){b.classList.remove('active');});
+        if (btn) btn.classList.add('active');
+        renderBoard();
+      }
+
+      function filterTrelloCards() { renderBoard(); }
+
+      function renderBoard() {
+        var container = document.getElementById('trello-board');
+        var visibleCount = 0;
+
+        container.innerHTML = boardData.lists.map(function(list) {
+          var listCards = boardData.cards.filter(function(c) {
+            return c.idList === list.id && matchesFilter(c) && matchesSearch(c);
+          });
+          visibleCount += listCards.length;
+
+          var cardsHtml = listCards.map(function(card) {
+            // Labels
+            var labels = (card.labels||[]).map(function(l) {
+              return '<span class="trello-card-label" style="background:'+labelColor(l.color)+';color:'+labelTextColor(l.color)+';">'+esc(l.name||l.color)+'</span>';
+            }).join('');
+
+            // Due date
+            var dueHtml = '';
+            if (card.due) {
+              var dc = dueClass(card);
+              var icon = dc === 'overdue' ? '&#x26a0;' : dc === 'complete' ? '&#x2705;' : '&#x1f4c5;';
+              dueHtml = '<span class="trello-card-due '+dc+'">'+icon+' '+formatDate(card.due)+'</span>';
+            }
+
+            // Members
+            var membersHtml = (card.idMembers||[]).map(function(mid) {
+              var m = getMemberById(mid);
+              var initials = getInitials(m);
+              var color = getMemberColor(mid);
+              var title = m ? esc(m.fullName) : 'Member';
+              return '<span class="trello-avatar" style="background:'+color+';" title="'+title+'">'+initials+'</span>';
+            }).join('');
+
+            // Checklist progress
+            var checkHtml = '';
+            if (card.checklists && card.checklists.length > 0) {
+              var total = 0, done = 0;
+              card.checklists.forEach(function(cl) { cl.checkItems.forEach(function(ci) { total++; if(ci.state==='complete') done++; }); });
+              if (total > 0) {
+                var pct = Math.round(done/total*100);
+                checkHtml = '<div class="trello-checklist-bar"><div class="trello-checklist-fill" style="width:'+pct+'%;"></div></div>';
+                checkHtml += '<div style="font-size:0.7rem;color:var(--text-dim);margin:2px 0 0 26px;">'+done+'/'+total+' items</div>';
+              }
+            }
+
+            // Badges (comment count, attachment count)
+            var badges = [];
+            var commentCount = card.badges ? card.badges.comments : ((card.actions||[]).length);
+            if (commentCount > 0) badges.push('<span>&#x1f4ac; '+commentCount+'</span>');
+            var attachCount = card.attachments ? card.attachments.length : (card.badges ? card.badges.attachments : 0);
+            if (attachCount > 0) badges.push('<span>&#x1f4ce; '+attachCount+'</span>');
+            var badgesHtml = badges.length ? '<div class="trello-card-badges">'+badges.join('')+'</div>' : '';
+
+            // Attachments
+            var attachHtml = '';
+            if (card.attachments && card.attachments.length > 0) {
+              attachHtml = '<div class="trello-attachments">' + card.attachments.map(function(a) {
+                return '<a class="trello-attachment" href="'+esc(a.url)+'" target="_blank" rel="noopener">&#x1f4ce; '+esc(a.name||'file')+'</a>';
+              }).join('') + '</div>';
+            }
+
+            // Comments
+            var comments = (card.actions||[]).filter(function(a){return a.type==='commentCard';});
+            var commentsHtml = comments.map(function(a) {
+              return '<div class="trello-comment"><span class="trello-comment-author">'+esc(a.memberCreator.fullName)+'</span><span class="trello-comment-date">'+timeAgo(a.date)+'</span><div class="trello-comment-text">'+esc(a.data.text)+'</div></div>';
+            }).join('');
+
+            // Move dropdown
+            var moveOptions = boardData.lists.map(function(l) {
+              var sel = l.id === card.idList ? ' selected' : '';
+              return '<option value="'+l.id+'"'+sel+'>'+esc(l.name)+'</option>';
+            }).join('');
+
+            return '<div class="trello-card'+(card.dueComplete?' completed':'')+'" id="card-'+card.id+'">' +
+              '<div class="trello-card-header">' +
+                '<input type="checkbox" class="trello-card-check" '+(card.dueComplete?'checked ':'')+' onchange="toggleCardComplete(''+card.id+'', this)" title="Toggle complete">' +
+                '<span class="trello-card-title">'+esc(card.name)+'</span>' +
               '</div>' +
+              (card.desc ? '<div class="trello-card-desc">'+esc(card.desc).replace(/\n/g,'<br>')+'</div>' : '') +
+              (labels ? '<div class="trello-card-meta"><div class="trello-card-labels">'+labels+'</div>'+dueHtml+(membersHtml?'<div class="trello-card-members">'+membersHtml+'</div>':'')+'</div>' : (dueHtml || membersHtml ? '<div class="trello-card-meta">'+dueHtml+(membersHtml?'<div class="trello-card-members">'+membersHtml+'</div>':'')+'</div>' : '')) +
+              checkHtml + badgesHtml + attachHtml +
+              '<div style="margin-top:0.5rem;display:flex;align-items:center;gap:6px;">' +
+                '<select class="trello-move-select" onchange="moveCard(''+card.id+'', this.value)" title="Move to list">'+moveOptions+'</select>' +
+                '<button style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:0.8rem;" onclick="toggleComments(''+card.id+'')">&#x1f4ac; Comments</button>' +
+              '</div>' +
+              '<div class="trello-card-comments-section" id="comments-'+card.id+'">' +
+                (commentsHtml || '<p style="color:var(--text-dim);font-size:0.75rem;opacity:0.5;">No comments yet</p>') +
+                '<div class="trello-add-comment">' +
+                  '<input type="text" id="comment-input-'+card.id+'" placeholder="Add comment..." onkeydown="if(event.key==='Enter')addComment(''+card.id+'')">' +
+                  '<button onclick="addComment(''+card.id+'')">Post</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          }).join('');
+
+          return '<div class="trello-list">' +
+            '<div class="trello-list-header"><span class="trello-list-title">'+esc(list.name)+'</span><span class="trello-list-count">'+listCards.length+'</span></div>' +
+            '<div class="trello-list-cards">'+cardsHtml+'</div>' +
+            '<div class="trello-add-card-form">' +
+              '<button class="trello-add-card-btn" onclick="showNewCard(''+list.id+'', this)">+ Add a card</button>' +
             '</div>' +
           '</div>';
         }).join('');
+
+        document.getElementById('trello-card-count').textContent = visibleCount + ' cards shown';
       }
 
-      async function markCardComplete(cardId, checkbox) {
+      function toggleComments(cardId) {
+        var el = document.getElementById('comments-' + cardId);
+        if (el) el.classList.toggle('open');
+      }
+
+      function showNewCard(listId, btn) {
+        var form = btn.parentElement;
+        form.innerHTML = '<textarea class="trello-new-card-input" id="new-card-'+listId+'" placeholder="Card title..."></textarea>' +
+          '<div class="trello-new-card-actions">' +
+            '<button class="save" onclick="createCard(''+listId+'')">Add Card</button>' +
+            '<button class="cancel" onclick="cancelNewCard(''+listId+'', this)">Cancel</button>' +
+          '</div>';
+        form.querySelector('textarea').focus();
+      }
+
+      function cancelNewCard(listId, btn) {
+        var form = btn.closest('.trello-add-card-form');
+        form.innerHTML = '<button class="trello-add-card-btn" onclick="showNewCard(''+listId+'', this)">+ Add a card</button>';
+      }
+
+      async function createCard(listId) {
+        var textarea = document.getElementById('new-card-' + listId);
+        var name = textarea.value.trim();
+        if (!name) return;
         try {
-          var token = Trello.token();
-          checkbox.disabled = true;
-          var cardEl = document.getElementById('card-' + cardId);
-          cardEl.classList.add('completed');
-          await fetch('https://api.trello.com/1/cards/' + cardId + '?key=' + TRELLO_KEY + '&token=' + token, {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({idList: COMPLETED_LIST, dueComplete: true})
+          textarea.disabled = true;
+          await fetch('https://api.trello.com/1/cards?key='+TRELLO_KEY+'&token='+trelloToken, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({idList: listId, name: name, pos: 'bottom'})
           });
-          setTimeout(function() { loadTrelloCards(); }, 1000);
+          loadTrelloBoard();
+        } catch (e) {
+          alert('Error creating card: ' + e.message);
+          textarea.disabled = false;
+        }
+      }
+
+      async function toggleCardComplete(cardId, checkbox) {
+        try {
+          checkbox.disabled = true;
+          var isComplete = checkbox.checked;
+          var cardEl = document.getElementById('card-' + cardId);
+          if (isComplete) cardEl.classList.add('completed'); else cardEl.classList.remove('completed');
+          await fetch('https://api.trello.com/1/cards/'+cardId+'?key='+TRELLO_KEY+'&token='+trelloToken, {
+            method: 'PUT',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({dueComplete: isComplete})
+          });
+          setTimeout(function(){ loadTrelloBoard(); }, 800);
         } catch (e) {
           checkbox.disabled = false;
+          alert('Error: ' + e.message);
+        }
+      }
+
+      async function moveCard(cardId, newListId) {
+        try {
+          await fetch('https://api.trello.com/1/cards/'+cardId+'?key='+TRELLO_KEY+'&token='+trelloToken, {
+            method: 'PUT',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({idList: newListId})
+          });
+          // Update local data
+          var card = boardData.cards.find(function(c){return c.id === cardId;});
+          if (card) card.idList = newListId;
+          renderBoard();
+        } catch (e) {
           alert('Error moving card: ' + e.message);
         }
       }
 
-      async function addTrelloComment(cardId) {
-        var input = document.getElementById('comment-' + cardId);
+      async function addComment(cardId) {
+        var input = document.getElementById('comment-input-' + cardId);
         var text = input.value.trim();
         if (!text) return;
         try {
-          var token = Trello.token();
           input.disabled = true;
-          await fetch('https://api.trello.com/1/cards/' + cardId + '/actions/comments?key=' + TRELLO_KEY + '&token=' + token + '&text=' + encodeURIComponent(text), {
+          await fetch('https://api.trello.com/1/cards/'+cardId+'/actions/comments?key='+TRELLO_KEY+'&token='+trelloToken+'&text='+encodeURIComponent(text), {
             method: 'POST'
           });
           input.value = '';
           input.disabled = false;
-          loadTrelloCards();
+          loadTrelloBoard();
         } catch (e) {
           input.disabled = false;
-          alert('Error adding comment: ' + e.message);
+          alert('Error: ' + e.message);
         }
+      }
+
+      function renderActivity() {
+        var container = document.getElementById('trello-activity');
+        var items = (boardData.actions || []).slice(0, 15).map(function(a) {
+          var mc = a.memberCreator || {};
+          var initials = mc.initials || (mc.fullName||'?').split(' ').map(function(w){return w[0];}).join('');
+          var color = getMemberColor(mc.id || 'x');
+          var text = '';
+          var d = a.data || {};
+          if (a.type === 'commentCard') text = '<strong>'+esc(mc.fullName)+'</strong> commented on <strong>'+esc(d.card?.name)+'</strong>';
+          else if (a.type === 'updateCard' && d.listAfter) text = '<strong>'+esc(mc.fullName)+'</strong> moved <strong>'+esc(d.card?.name)+'</strong> to '+esc(d.listAfter.name);
+          else if (a.type === 'updateCard') text = '<strong>'+esc(mc.fullName)+'</strong> updated <strong>'+esc(d.card?.name)+'</strong>';
+          else if (a.type === 'createCard') text = '<strong>'+esc(mc.fullName)+'</strong> created <strong>'+esc(d.card?.name)+'</strong>';
+          else if (a.type === 'addMemberToCard') text = '<strong>'+esc(mc.fullName)+'</strong> joined <strong>'+esc(d.card?.name)+'</strong>';
+          else if (a.type === 'addAttachmentToCard') text = '<strong>'+esc(mc.fullName)+'</strong> attached a file to <strong>'+esc(d.card?.name)+'</strong>';
+          else text = '<strong>'+esc(mc.fullName)+'</strong> '+a.type.replace(/([A-Z])/g,' $1').toLowerCase();
+          if (!text) return '';
+          return '<div class="trello-activity-item">' +
+            '<div class="trello-activity-avatar" style="background:'+color+';">'+initials+'</div>' +
+            '<div><div class="trello-activity-text">'+text+'</div><div class="trello-activity-time">'+timeAgo(a.date)+'</div></div>' +
+          '</div>';
+        }).filter(Boolean).join('');
+
+        container.innerHTML = '<div class="trello-activity-feed"><h3>&#x1f4cb; Recent Activity</h3>'+items+'</div>';
       }
 
       // Auto-connect if token exists from previous session
       if (typeof Trello !== 'undefined' && localStorage.getItem('trello_token')) {
-        Trello.setToken(localStorage.getItem('trello_token'));
+        trelloToken = localStorage.getItem('trello_token');
+        Trello.setToken(trelloToken);
         document.getElementById('trello-auth-btn').innerHTML = '&#x2705; Connected';
         document.getElementById('trello-auth-btn').style.background = '#22c55e';
         document.getElementById('trello-refresh-btn').style.display = 'inline-block';
-        loadTrelloCards();
+        document.getElementById('trello-toolbar').style.display = 'flex';
+        loadTrelloBoard();
       }
 </script>
 </body>
