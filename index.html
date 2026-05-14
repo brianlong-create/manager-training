@@ -588,19 +588,65 @@
   }
   function pauseAllVideos() { pauseVideosIn(document); }
 
+  function scrollAccordionToTop(el) {
+    if (!el) return;
+    var nav = document.querySelector('.nav');
+    var navH = nav ? nav.offsetHeight : 64;
+    requestAnimationFrame(function() {
+      var rect = el.getBoundingClientRect();
+      var targetY = window.scrollY + rect.top - navH - 12;
+      if (targetY < 0) targetY = 0;
+      if (Math.abs(window.scrollY - targetY) < 8) return;
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    });
+  }
+
   function toggleModule(header) {
     const mod = header.closest('.module');
     const wasOpen = mod.classList.contains('open');
+    // Measure now-open siblings ABOVE this one before collapsing — the
+    // exclusive-accordion collapse will pull this header up by that amount,
+    // so we pre-subtract it from our scroll target to land at the right
+    // final position even though the CSS max-height transition is still
+    // animating when window.scrollTo fires.
+    let collapseAdjustment = 0;
+    if (!wasOpen) {
+      document.querySelectorAll('.module.open').forEach(m => {
+        if (m === mod) return;
+        if (m.compareDocumentPosition(mod) & Node.DOCUMENT_POSITION_FOLLOWING) {
+          var body = m.querySelector('.module-body');
+          if (body) collapseAdjustment += body.offsetHeight;
+        }
+      });
+    }
     document.querySelectorAll('.module.open').forEach(m => {
       if (m !== mod) pauseVideosIn(m);
       m.classList.remove('open');
     });
     if (!wasOpen) {
       mod.classList.add('open');
+      var nav = document.querySelector('.nav');
+      var navH = nav ? nav.offsetHeight : 64;
+      var currentTop = header.getBoundingClientRect().top + window.scrollY;
+      var targetY = currentTop - collapseAdjustment - navH - 12;
+      if (targetY < 0) targetY = 0;
+      if (Math.abs(window.scrollY - targetY) >= 8) {
+        window.scrollTo({ top: targetY, behavior: 'smooth' });
+      }
     } else {
       pauseVideosIn(mod);
     }
   }
+
+  // Buzzword & scenario reveals use inline onclick="this.classList.toggle('revealed')"
+  // which fires before bubbled listeners. After the toggle settles, if the
+  // card just opened, scroll its top under the sticky nav.
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.buzzword-card, .scenario');
+    if (!card) return;
+    if (!card.classList.contains('revealed')) return;
+    scrollAccordionToTop(card);
+  });
 
   function goToSection(id) {
     const el = document.getElementById(id);
